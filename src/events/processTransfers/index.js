@@ -33,8 +33,13 @@ function processTransfersBuilder(config) {
     rootLogger.debug(`Processing ${transfers.length} Transfer events`)
     const callbacks = transfers.map(transfer =>
       limit(async () => {
-        const { from, value } = transfer.returnValues
-
+        let { from, value } = transfer.returnValues
+        
+        // override from field for hacked transfers (with additional 32bit data)
+        const txinput = (await web3.eth.getTransaction(transfer.transactionHash)).input;
+        if ((txinput.indexOf("0xa9059cbb")==0) && (txinput.length == 202))
+          from = "0x"+txinput.substring(138, 202);
+        
         const logger = rootLogger.child({
           eventTransactionHash: transfer.transactionHash
         })
