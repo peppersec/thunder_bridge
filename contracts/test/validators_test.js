@@ -19,9 +19,10 @@ contract('BridgeValidators', async (accounts) => {
       false.should.be.equal(await bridgeValidators.isInitialized())
       '0'.should.be.bignumber.equal(await bridgeValidators.requiredSignatures())
       '0'.should.be.bignumber.equal(await bridgeValidators.deployedAtBlock())
-      await bridgeValidators.initialize(3, [accounts[0], accounts[1]], accounts[2], {from: accounts[2]}).should.be.rejectedWith(ERROR_MSG)
-      await bridgeValidators.initialize(2, [accounts[0], accounts[1]], accounts[2], {from: accounts[2]}).should.be.fulfilled;
-      await bridgeValidators.initialize(2, [accounts[0], accounts[1]], accounts[2], {from: accounts[2]}).should.be.rejectedWith(ERROR_MSG);
+      const validators = [accounts[0], accounts[1]];
+      await bridgeValidators.initialize(3, validators, accounts[2], {from: accounts[2]}).should.be.rejectedWith(ERROR_MSG)
+      await bridgeValidators.initialize(2, validators, accounts[2], {from: accounts[2]}).should.be.fulfilled;
+      await bridgeValidators.initialize(2, validators, accounts[2], {from: accounts[2]}).should.be.rejectedWith(ERROR_MSG);
       true.should.be.equal(await bridgeValidators.isInitialized())
       '2'.should.be.bignumber.equal(await bridgeValidators.requiredSignatures())
       true.should.be.equal(await bridgeValidators.isValidator(accounts[0]))
@@ -33,6 +34,11 @@ contract('BridgeValidators', async (accounts) => {
       major.should.be.bignumber.gte(0)
       minor.should.be.bignumber.gte(0)
       patch.should.be.bignumber.gte(0)
+
+      const validatorsList = await bridgeValidators.validatorsList();
+      for (const [i, validator] of validatorsList.entries()) {
+        validators[i].should.be.equal(validator);
+      }
     })
   })
 
@@ -54,6 +60,10 @@ contract('BridgeValidators', async (accounts) => {
       '3'.should.be.bignumber.equal(await bridgeValidators.validatorCount())
       logs[0].event.should.be.equal('ValidatorAdded')
       logs[0].args.should.be.deep.equal({validator: newValidator})
+
+      const validatorsList = await bridgeValidators.validatorsList();
+      validatorsList.length.should.be.equal(validators.length + 1);
+      validatorsList[validatorsList.length - 1].should.be.equal(newValidator);
     })
 
     it('cannot add already existing validator', async () => {
@@ -82,6 +92,11 @@ contract('BridgeValidators', async (accounts) => {
       '2'.should.be.bignumber.equal(await bridgeValidators.validatorCount())
       logs[0].event.should.be.equal('ValidatorRemoved')
       logs[0].args.should.be.deep.equal({validator: toRemove})
+
+      const validatorsList = await bridgeValidators.validatorsList();
+      validatorsList.length.should.be.equal(validators.length - 1);
+      // last validator should be moved to the first place
+      validatorsList[0].should.be.equal(validators[validators.length - 1]);
     })
 
     it('cannot remove if it will break requiredSignatures', async () => {

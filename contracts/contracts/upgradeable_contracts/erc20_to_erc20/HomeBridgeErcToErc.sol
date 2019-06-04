@@ -8,9 +8,11 @@ import "../../ERC677Receiver.sol";
 import "../BasicHomeBridge.sol";
 import "../ERC677Bridge.sol";
 import "../OverdrawManagement.sol";
+import "../FeeManager.sol";
+import "../../IBridgeValidators.sol";
 
 
-contract HomeBridgeErcToErc is ERC677Receiver, EternalStorage, BasicBridge, BasicHomeBridge, ERC677Bridge, OverdrawManagement {
+contract HomeBridgeErcToErc is ERC677Receiver, EternalStorage, BasicBridge, BasicHomeBridge, ERC677Bridge, OverdrawManagement, FeeManager {
 
     event AmountLimitExceeded(address recipient, uint256 value, bytes32 transactionHash);
 
@@ -24,7 +26,8 @@ contract HomeBridgeErcToErc is ERC677Receiver, EternalStorage, BasicBridge, Basi
         address _erc677token,
         uint256 _foreignDailyLimit,
         uint256 _foreignMaxPerTx,
-        address _owner
+        address _owner,
+        uint256 _feePercent
     ) public
       returns(bool)
     {
@@ -35,6 +38,7 @@ contract HomeBridgeErcToErc is ERC677Receiver, EternalStorage, BasicBridge, Basi
         require(_minPerTx > 0 && _maxPerTx > _minPerTx && _dailyLimit > _maxPerTx);
         require(_foreignMaxPerTx < _foreignDailyLimit);
         require(_owner != address(0));
+        require(_feePercent < 10000, "Invalid fee percent");
         addressStorage[keccak256(abi.encodePacked("validatorContract"))] = _validatorContract;
         uintStorage[keccak256(abi.encodePacked("deployedAtBlock"))] = block.number;
         uintStorage[keccak256(abi.encodePacked("dailyLimit"))] = _dailyLimit;
@@ -44,6 +48,7 @@ contract HomeBridgeErcToErc is ERC677Receiver, EternalStorage, BasicBridge, Basi
         uintStorage[keccak256(abi.encodePacked("requiredBlockConfirmations"))] = _requiredBlockConfirmations;
         uintStorage[keccak256(abi.encodePacked("executionDailyLimit"))] = _foreignDailyLimit;
         uintStorage[keccak256(abi.encodePacked("executionMaxPerTx"))] = _foreignMaxPerTx;
+        uintStorage[keccak256(abi.encodePacked("feePercent"))] = _feePercent;
         setOwner(_owner);
         setInitialize(true);
         setErc677token(_erc677token);
@@ -61,7 +66,24 @@ contract HomeBridgeErcToErc is ERC677Receiver, EternalStorage, BasicBridge, Basi
 
     function onExecuteAffirmation(address _recipient, uint256 _value) internal returns(bool) {
         setTotalExecutedPerDay(getCurrentDay(), totalExecutedPerDay(getCurrentDay()).add(_value));
-        return erc677token().mint(_recipient, _value);
+        if (feePercent() == 0) {
+            return erc677token().mint(_recipient, _value);
+        } else {
+            uint256 userValue = subtractFee(_value);
+            address[] memory validators = validatorContract().validatorsList();
+            uint256 entireValidatorValue = _value.sub(userValue);
+            uint256 particularValidatorValue = entireValidatorValue.div(validators.length);
+            for(uint256 i = 0; i < validators.length - 1; i++) {
+                erc677token().mint(validators[i], particularValidatorValue);
+            }
+            // to avoid round error we need to calculate the fee value in other way for the last validator
+            uint256 lastValidatorValue = entireValidatorValue.sub(
+                particularValidatorValue.mul(validators.length.sub(1))
+            );
+            erc677token().mint(validators[validators.length - 1], lastValidatorValue);
+            return erc677token().mint(_recipient, userValue);
+        }
+
     }
 
     function fireEventOnTokenTransfer(address _from, uint256 _value) internal {

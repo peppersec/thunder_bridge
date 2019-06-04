@@ -101,9 +101,10 @@ contract('ERC677BridgeToken', async (accounts) => {
     beforeEach(async () => {
       validatorContract = await BridgeValidators.new()
       const authorities = [accounts[2]];
+      const feePercent = '0';
       await validatorContract.initialize(1, authorities, owner)
       homeErcToErcContract = await HomeErcToErcBridge.new()
-      await homeErcToErcContract.initialize(validatorContract.address, oneEther, halfEther, minPerTx, gasPrice, requireBlockConfirmations, token.address, executionDailyLimit, executionMaxPerTx, owner)
+      await homeErcToErcContract.initialize(validatorContract.address, oneEther, halfEther, minPerTx, gasPrice, requireBlockConfirmations, token.address, executionDailyLimit, executionMaxPerTx, owner, feePercent)
       foreignNativeToErcBridge = await ForeignNativeToErcBridge.new()
       await foreignNativeToErcBridge.initialize(validatorContract.address, token.address, oneEther, halfEther, minPerTx, gasPrice, requireBlockConfirmations, executionDailyLimit, executionMaxPerTx, owner);
     })
@@ -189,9 +190,10 @@ contract('ERC677BridgeToken', async (accounts) => {
     beforeEach(async () => {
       validatorContract = await BridgeValidators.new()
       const authorities = [accounts[2]];
+      const feePercent = '0';
       await validatorContract.initialize(1, authorities, owner)
       homeErcToErcContract = await HomeErcToErcBridge.new()
-      await homeErcToErcContract.initialize(validatorContract.address, oneEther, halfEther, minPerTx, gasPrice, requireBlockConfirmations, token.address, executionDailyLimit, executionMaxPerTx, owner)
+      await homeErcToErcContract.initialize(validatorContract.address, oneEther, halfEther, minPerTx, gasPrice, requireBlockConfirmations, token.address, executionDailyLimit, executionMaxPerTx, owner, feePercent)
       foreignNativeToErcBridge = await ForeignNativeToErcBridge.new()
       await foreignNativeToErcBridge.initialize(validatorContract.address, token.address, oneEther, halfEther, minPerTx, gasPrice, requireBlockConfirmations, executionDailyLimit, executionMaxPerTx, owner);
     })
