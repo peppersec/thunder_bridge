@@ -1,9 +1,0 @@
-node_modules
-deploy/node_modules
-.git
-.dockerignore
-deploy/.env
-docker-compose.yml
-Dockerfile
-*.log
-flats

@@ -1,7 +1,0 @@
-{
-  "extends": "../.eslintrc",
-  "rules": {
-    "import/no-extraneous-dependencies": "off",
-    "node/no-unpublished-require": "off"
-  }
-}
