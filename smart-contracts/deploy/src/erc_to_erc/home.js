@@ -175,6 +175,7 @@ async function deployHome() {
   HOME_GAS_PRICE: ${HOME_GAS_PRICE}, HOME_REQUIRED_BLOCK_CONFIRMATIONS : ${HOME_REQUIRED_BLOCK_CONFIRMATIONS}
   `)
   homeBridgeImplementation.options.address = homeBridgeStorage.options.address
+
   const initializeHomeBridgeData = await homeBridgeImplementation.methods
     .initialize(
       storageValidatorsHome.options.address,
