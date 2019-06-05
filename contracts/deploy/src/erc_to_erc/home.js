@@ -27,7 +27,8 @@ const {
   BRIDGEABLE_TOKEN_SYMBOL,
   BRIDGEABLE_TOKEN_DECIMALS,
   FOREIGN_DAILY_LIMIT,
-  FOREIGN_MAX_AMOUNT_PER_TX
+  FOREIGN_MAX_AMOUNT_PER_TX,
+  HOME_FEE_PERCENT
 } = env
 
 const DEPLOYMENT_ACCOUNT_ADDRESS = privateKeyToAddress(DEPLOYMENT_ACCOUNT_PRIVATE_KEY)
@@ -186,7 +187,8 @@ async function deployHome() {
       erc677token.options.address,
       FOREIGN_DAILY_LIMIT,
       FOREIGN_MAX_AMOUNT_PER_TX,
-      HOME_BRIDGE_OWNER
+      HOME_BRIDGE_OWNER,
+      HOME_FEE_PERCENT
     )
     .encodeABI({ from: DEPLOYMENT_ACCOUNT_ADDRESS })
   const txInitializeHomeBridge = await sendRawTxHome({
