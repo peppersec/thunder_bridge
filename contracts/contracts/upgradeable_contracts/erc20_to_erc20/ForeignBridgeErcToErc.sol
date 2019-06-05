@@ -6,9 +6,9 @@ import "../BasicForeignBridge.sol";
 import "../../IBurnableMintableERC677Token.sol";
 import "../../ERC677Receiver.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Basic.sol";
+import "../FeeManager.sol";
 
-
-contract ForeignBridgeErcToErc is BasicBridge, BasicForeignBridge {
+contract ForeignBridgeErcToErc is BasicBridge, BasicForeignBridge, FeeManager {
 
     event RelayedMessage(address recipient, uint value, bytes32 transactionHash);
 
@@ -20,7 +20,8 @@ contract ForeignBridgeErcToErc is BasicBridge, BasicForeignBridge {
         uint256 _maxPerTx,
         uint256 _homeDailyLimit,
         uint256 _homeMaxPerTx,
-        address _owner
+        address _owner,
+        uint256 _feePercent
     ) public returns(bool) {
         require(!isInitialized());
         require(_validatorContract != address(0) && isContract(_validatorContract));
@@ -28,6 +29,7 @@ contract ForeignBridgeErcToErc is BasicBridge, BasicForeignBridge {
         require(_gasPrice > 0);
         require(_homeMaxPerTx < _homeDailyLimit);
         require(_owner != address(0));
+        require(_feePercent < 10000, "Invalid fee percent");
         addressStorage[keccak256(abi.encodePacked("validatorContract"))] = _validatorContract;
         setErc20token(_erc20token);
         uintStorage[keccak256(abi.encodePacked("deployedAtBlock"))] = block.number;
@@ -36,6 +38,7 @@ contract ForeignBridgeErcToErc is BasicBridge, BasicForeignBridge {
         uintStorage[keccak256(abi.encodePacked("maxPerTx"))] = _maxPerTx;
         uintStorage[keccak256(abi.encodePacked("executionDailyLimit"))] = _homeDailyLimit;
         uintStorage[keccak256(abi.encodePacked("executionMaxPerTx"))] = _homeMaxPerTx;
+        uintStorage[keccak256(abi.encodePacked("feePercent"))] = _feePercent;
         setOwner(_owner);
         setInitialize(true);
         return isInitialized();
@@ -56,7 +59,23 @@ contract ForeignBridgeErcToErc is BasicBridge, BasicForeignBridge {
 
     function onExecuteMessage(address _recipient, uint256 _amount) internal returns(bool){
         setTotalExecutedPerDay(getCurrentDay(), totalExecutedPerDay(getCurrentDay()).add(_amount));
-        return erc20token().transfer(_recipient, _amount);
+        if (feePercent() == 0) {
+            return erc20token().transfer(_recipient, _amount);
+        } else {
+            uint256 userValue = subtractFee(_amount);
+            address[] memory validators = validatorContract().validatorsList();
+            uint256 entireValidatorValue = _amount.sub(userValue);
+            uint256 particularValidatorValue = entireValidatorValue.div(validators.length);
+            for(uint256 i = 0; i < validators.length - 1; i++) {
+                erc20token().transfer(validators[i], particularValidatorValue);
+            }
+            // to avoid round error we need to calculate the fee value in other way for the last validator
+            uint256 lastValidatorValue = entireValidatorValue.sub(
+                particularValidatorValue.mul(validators.length.sub(1))
+            );
+            erc20token().transfer(validators[validators.length - 1], lastValidatorValue);
+            return erc20token().transfer(_recipient, userValue);
+        }
     }
 
     function setErc20token(address _token) private {

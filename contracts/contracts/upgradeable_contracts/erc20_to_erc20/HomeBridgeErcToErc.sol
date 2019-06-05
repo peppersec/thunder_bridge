@@ -9,7 +9,6 @@ import "../BasicHomeBridge.sol";
 import "../ERC677Bridge.sol";
 import "../OverdrawManagement.sol";
 import "../FeeManager.sol";
-import "../../IBridgeValidators.sol";
 
 
 contract HomeBridgeErcToErc is ERC677Receiver, EternalStorage, BasicBridge, BasicHomeBridge, ERC677Bridge, OverdrawManagement, FeeManager {
