@@ -672,5 +672,20 @@ contract('HomeBridge_ERC20_to_ERC20', async (accounts) => {
       const processed = new web3.BigNumber(2).pow(255).add(2);
       markedAsProcessed.should.be.bignumber.equal(processed)
     })
+
+    it('only owner can set fee percent', async () => {
+      const homeContract = await HomeBridge.new()
+      const token = await ERC677BridgeToken.new("Some ERC20", "RSZT", 18);
+      await homeContract.initialize(validatorContract.address, '3', '2', '1', gasPrice, requireBlockConfirmations, token.address, foreignDailyLimit, foreignMaxPerTx, owner, FEE_PERCENT);
+
+      const newFeePercent = web3.toBigNumber('1337');
+      const { logs } = await homeContract.setFeePercent(newFeePercent);
+      logs[0].event.should.be.equal('FeePercentChanged')
+      logs[0].args.newFeePercent.should.be.bignumber.equal(newFeePercent);
+      const feePercentFromContract = await homeContract.feePercent();
+      feePercentFromContract.should.be.bignumber.equal(newFeePercent);
+
+      await homeContract.setFeePercent(newFeePercent, {from: accounts[5]}).should.be.rejectedWith(ERROR_MSG);
+    })
   })
 })
