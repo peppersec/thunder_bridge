@@ -34,13 +34,14 @@ function processTransfersBuilder(config) {
     const callbacks = transfers.map(transfer =>
       limit(async () => {
         let { from, value } = transfer.returnValues
-        
-        // override from field for hacked transfers (with additional 32bit data)
-        const tx = (await config.web3.eth.getTransaction(transfer.transactionHash));
 
-        if ((tx.input.indexOf("0xa9059cbb")==0) && (tx.input.length == 202))
-         from = "0x"+tx.input.substring(138, 202);
-        
+        // override from field for hacked transfers (with additional 32bit data)
+        const tx = await config.web3.eth.getTransaction(transfer.transactionHash)
+
+        if (tx.input.indexOf('0xa9059cbb') === 0 && tx.input.length === 202) {
+          from = `0x${tx.input.substring(162, 202)}`
+        }
+
         const logger = rootLogger.child({
           eventTransactionHash: transfer.transactionHash
         })
