@@ -1,19 +1,10 @@
 pragma solidity ^0.4.19;
 
 
-import "../../contracts/upgradeable_contracts/native_to_erc20/ForeignBridgeNativeToErc.sol";
+import "../../contracts/upgradeable_contracts/erc20_to_erc20/ForeignBridgeErcToErc.sol";
 
 
-interface OwnableToken {
-    function transferOwnership(address) external;
-}
-
-contract ForeignBridgeV2 is ForeignBridgeNativeToErc {
-    function changeTokenOwnership(address _newTokenOwner) public onlyOwner {
-        address token = address(erc677token());
-        OwnableToken poa = OwnableToken(token);
-        poa.transferOwnership(_newTokenOwner);
-    }
+contract ForeignBridgeV2 is ForeignBridgeErcToErc {
     // used for testing
     address public something;
     function doSomething(address _newTokenOwner) public onlyOwner {
