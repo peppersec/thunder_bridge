@@ -5,19 +5,23 @@ This needs to be done only once
 
 - Open `contracts` dir
 - Customize `.env` file as needed
-- To deploy contracts run:
+- To deploy contracts run
 ```
+cp .env.example .env
+vi .env
 docker-compose run contracts deploy
 ```
 - Note new contract addresses in console and in addresses.json file, you will
-  need to put deployed addresses into your .env file
+  need to put deployed addresses into your `.env` files in other modules
 
 ## Bridge
 - Open `bridge` dir
 - Customize `.env` file as needed
-- Launch the bridge with:
+- Launch the bridge
 ```
 cd bridge
+cp .env.example .env
+vi .env
 docker-compose up -d
 ```
 
@@ -33,6 +37,8 @@ docker-compose up -d
 - Deploy the ui backend
 ```
 cd ui
+cp .env.example .env
+vi .env
 docker-compose up -d
 ```
 
@@ -48,5 +54,7 @@ docker-compose up -d
 - Deploy the monitoring backend
 ```
 cd monitoring
+cp .env.example .env
+vi .env
 docker-compose up -d
 ```
