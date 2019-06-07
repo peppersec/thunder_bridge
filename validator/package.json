@@ -15,7 +15,9 @@
     "test:watch": "NODE_ENV=test mocha --watch --reporter=min",
     "coverage": "NODE_ENV=test nyc --reporter=text --reporter=html mocha",
     "postinstall": "npm install --prefix e2e && mkdir -p logs",
-    "docker-message": "echo 'Please run a valid npm command'"
+    "docker-message": "echo 'Please run a valid npm command'",
+    "sendForeign": "node scripts/erc20_to_erc20/sendForeign.js",
+    "sendHome": "node scripts/erc20_to_erc20/sendHome.js"
   },
   "author": "",
   "license": "ISC",
