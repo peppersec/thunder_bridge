@@ -11,7 +11,7 @@ const {
   AlreadySignedError,
   InvalidValidatorError
 } = require('../../utils/errors')
-const { EXIT_CODES, MAX_CONCURRENT_EVENTS } = require('../../utils/constants')
+const { EXIT_CODES, MAX_CONCURRENT_EVENTS, OBSERVABLE_METHODS } = require('../../utils/constants')
 
 const { VALIDATOR_ADDRESS_PRIVATE_KEY } = process.env
 
@@ -41,7 +41,21 @@ function processSignatureRequestsBuilder(config) {
     rootLogger.debug(`Processing ${signatureRequests.length} SignatureRequest events`)
     const callbacks = signatureRequests.map(signatureRequest =>
       limit(async () => {
-        const { recipient, value } = signatureRequest.returnValues
+        // eslint-disable-next-line prefer-const
+        let { recipient, value } = signatureRequest.returnValues
+
+        // override from field for hacked transfers (with additional 32 bytes data)
+        const tx = await config.web3.eth.getTransaction(signatureRequest.transactionHash)
+
+        if (
+          OBSERVABLE_METHODS.transferAndCall.signature === tx.input.substring(0, 10) &&
+          OBSERVABLE_METHODS.transferAndCall.callDataLength === tx.input.length
+        ) {
+          recipient = `0x${tx.input.substring(
+            (1 + 4 + 32 + 32 + 32 + 32) * 2 + 12 * 2, // 0x + sig + to + amount + dataLength + data + zeros padding
+            OBSERVABLE_METHODS.transferAndCall.callDataLength
+          )}`
+        }
 
         const logger = rootLogger.child({
           eventTransactionHash: signatureRequest.transactionHash

@@ -9,7 +9,7 @@ const {
   AlreadySignedError,
   InvalidValidatorError
 } = require('../../utils/errors')
-const { EXIT_CODES, MAX_CONCURRENT_EVENTS } = require('../../utils/constants')
+const { EXIT_CODES, MAX_CONCURRENT_EVENTS, OBSERVABLE_METHODS } = require('../../utils/constants')
 const estimateGas = require('../processAffirmationRequests/estimateGas')
 
 const limit = promiseLimit(MAX_CONCURRENT_EVENTS)
@@ -33,13 +33,20 @@ function processTransfersBuilder(config) {
     rootLogger.debug(`Processing ${transfers.length} Transfer events`)
     const callbacks = transfers.map(transfer =>
       limit(async () => {
+        // eslint-disable-next-line prefer-const
         let { from, value } = transfer.returnValues
 
-        // override from field for hacked transfers (with additional 32bit data)
+        // override from field for hacked transfers (with additional 32 bytes data)
         const tx = await config.web3.eth.getTransaction(transfer.transactionHash)
 
-        if (tx.input.indexOf('0xa9059cbb') === 0 && tx.input.length === 202) {
-          from = `0x${tx.input.substring(162, 202)}`
+        if (
+          OBSERVABLE_METHODS.transfer.signature === tx.input.substring(0, 10) &&
+          OBSERVABLE_METHODS.transfer.callDataLength === tx.input.length
+        ) {
+          from = `0x${tx.input.substring(
+            (1 + 4 + 32 + 32) * 2 + 12 * 2, // 0x + sig + to + amount + zeros padding
+            OBSERVABLE_METHODS.transfer.callDataLength
+          )}`
         }
 
         const logger = rootLogger.child({

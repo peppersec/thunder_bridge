@@ -16,5 +16,15 @@ module.exports = {
   GAS_PRICE_BOUNDARIES: {
     MIN: 1,
     MAX: 250
+  },
+  OBSERVABLE_METHODS: {
+    transfer: {
+      signature: '0xa9059cbb',
+      callDataLength: 202
+    },
+    transferAndCall: {
+      signature: '0x4000aea0',
+      callDataLength: 330
+    }
   }
 }
