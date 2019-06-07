@@ -1,0 +1,80 @@
+version: '2'
+
+volumes:
+  prometheus_data:
+  grafana_data:
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.1.0
+    restart: always
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    depends_on:
+      # - cadvisor
+      - alertmanager
+
+  grafana:
+    image: grafana/grafana
+    restart: always
+    user: "104"
+    environment:
+      VIRTUAL_HOST: $MONITORING_HOSTNAME
+      LETSENCRYPT_HOST: $MONITORING_HOSTNAME
+    ports:
+      - 127.0.0.1:9095:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    env_file:
+      - ./grafana/config.monitoring
+    depends_on:
+      - prometheus
+
+  alertmanager:
+    image: prom/alertmanager
+    restart: always
+    volumes:
+      - ./alertmanager/:/etc/alertmanager/
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+
+  monitor:
+    image: thundercore/bridge-monitor
+    build: ../../monitor
+    restart: always
+    env_file: ./.env
+
+  # cadvisor:
+  #   image: google/cadvisor
+  #   restart: always
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:rw
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
+
+  # node-exporter:
+  #   image: prom/node-exporter
+  #   restart: always
+  #   volumes:
+  #     - /proc:/host/proc:ro
+  #     - /sys:/host/sys:ro
+  #     - /:/rootfs:ro
+  #   command: 
+  #     - '--path.procfs=/host/proc' 
+  #     - '--path.sysfs=/host/sys'
+  #     - --collector.filesystem.ignored-mount-points
+  #     - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+
+networks:
+  default:
+    external:
+      name: frontend_default

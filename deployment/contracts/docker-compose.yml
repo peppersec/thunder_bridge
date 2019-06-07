@@ -1,0 +1,7 @@
+version: '2'
+
+services:
+  contracts:
+    image: thundercore/bridge-contracts
+    build: ../../contracts
+    env_file: ./.env

@@ -1,16 +1,15 @@
 FROM node:8
 
-RUN apt-get update
-RUN apt-get install -y build-essential
-RUN apt-get install -y libc6-dev
-RUN apt-get install -y libc6-dev-i386
-RUN apt-get install -y wget
-RUN apt-get clean
+RUN apt-get update -yq && \
+	apt-get install -yq build-essential libc6-dev libc6-dev-i386 wget && \
+	rm -rf /var/lib/apt/lists/*
 
-WORKDIR /bridge
+WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
 RUN npm install
+
 COPY . .
-CMD echo "To start a bridge process run:" \
-  "VALIDATOR_ADDRESS=<validator address> VALIDATOR_ADDRESS_PRIVATE_KEY=<validator address private key> docker-compose up -d --build"
+ENTRYPOINT ["npm", "run"]
+CMD ["docker-message"]
+

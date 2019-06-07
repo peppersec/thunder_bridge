@@ -1,0 +1,77 @@
+version: '2'
+
+services:
+  rabbit:
+    image: rabbitmq:3
+    restart: always
+    environment: 
+      RABBITMQ_NODENAME: node@rabbit
+    volumes: 
+      - ./data/rabbitmq:/var/lib/rabbitmq/mnesia
+
+  redis:
+    image: redis:4
+    restart: always
+    command: [redis-server, --appendonly, 'yes']
+    volumes: 
+      - ./data/redis:/data
+
+  bridge_request:
+    image: thundercore/bridge
+    build: ../../validator
+    command: watcher:signature-request
+    restart: always
+    environment: 
+      - NODE_ENV=production
+    env_file: ./.env
+    depends_on:
+      - rabbit
+      - redis
+
+  bridge_collected:
+    image: thundercore/bridge
+    build: ../../validator
+    command: watcher:collected-signatures
+    restart: always
+    environment:
+      - NODE_ENV=production
+    env_file: ./.env
+    depends_on:
+      - rabbit
+      - redis
+
+  bridge_affirmation:
+    image: thundercore/bridge
+    build: ../../validator
+    command: watcher:affirmation-request
+    restart: always
+    environment:
+      - NODE_ENV=production
+    env_file: ./.env
+    depends_on:
+      - rabbit
+      - redis
+
+  bridge_home:
+    image: thundercore/bridge
+    build: ../../validator
+    command: sender:home
+    restart: always
+    environment:
+      - NODE_ENV=production
+    env_file: ./.env
+    depends_on:
+      - rabbit
+      - redis
+
+  bridge_foreign:
+    image: thundercore/bridge
+    build: ../../validator
+    command: sender:foreign
+    restart: always
+    environment:
+      - NODE_ENV=production
+    env_file: ./.env
+    depends_on:
+      - rabbit
+      - redis

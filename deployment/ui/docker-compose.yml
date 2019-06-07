@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  ui:
+    image: thundercore/bridge-ui
+    build: ../../ui
+    environment:
+      VIRTUAL_HOST: $UI_HOSTNAME
+      LETSENCRYPT_HOST: $UI_HOSTNAME
+    env_file: ./.env
+
+networks:
+  default:
+    external:
+      name: frontend_default

@@ -7,7 +7,8 @@
     "test": "scripts/test.sh",
     "compile": "truffle compile",
     "flatten": "bash flatten.sh",
-    "watch-tests": "./node_modules/.bin/nodemon ./node_modules/.bin/truffle test --network test"
+    "watch-tests": "./node_modules/.bin/nodemon ./node_modules/.bin/truffle test --network test",
+    "docker-message": "echo 'Please run deploy command explicitly'"
   },
   "author": "POA network",
   "license": "GPLv3",
