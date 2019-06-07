@@ -50,5 +50,3 @@ docker-compose up -d
 cd monitoring
 docker-compose up -d
 ```
-
-# TODO: add VIRTUAL_HOST to .env in UI and monitoring
