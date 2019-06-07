@@ -1,35 +1,87 @@
 
-# TokenBridge validator software
+# TokenBridge
+
+The TokenBridge is deployed on specified validator nodes (only nodes whose private keys correspond to addresses specified in the smart contracts) in the network. It connects to two chains via a Remote Procedure Call (RPC) and is responsible for:
+- listening to events related to bridge contracts
+- sending transactions to authorize asset transfers
+
+## General Bridge Overview
+
+The Bridge allows users to transfer assets between two chains in the Ethereum ecosystem. This is a customized version of [POA network Bridge](https://github.com/poanetwork/tokenbridge).
+
+**Bridge Elements**
+1. The TokenBridge contained in this repository.
+2. [Solidity smart contracts](./contracts). Used to manage bridge validators, collect signatures, and confirm asset relay and disposal.
+3. [Bridge UI Application](./ui). A DApp interface to transfer tokens and coins between chains.
+4. [Bridge Monitor](./monitor). A tool for checking balances and unprocessed events in bridged networks.
+5. [Bridge Deployment](./deployment). Manages configuration instructions for deployment.
+
+## Network Definitions
+
+ Bridging occurs between two networks.
+
+ * **Home** - is a network with fast and inexpensive operations. All bridge operations to collect validator confirmations are performed on this side of the bridge.
+
+* **Foreign** can be any chain; generally it refers to the Ethereum mainnet. 
+
+## Operational Modes
+
+The TokenBridge provides next operational mode:
+
+- [x] `ERC20-to-ERC20` ERC20-compatible tokens on the Foreign network are locked and minted as ERC20-compatible tokens (ERC677 tokens) on the Home network. When transferred from Home to Foreign, they are burnt on the Home side and unlocked in the Foreign network. This can be considered a form of atomic swap when a user swaps the token "X" in network "A" to the token "Y" in network "B".
+
+## Architecture
+
+### ERC20-to-ERC20
+
+![ERC-to-ERC](./validator/docs/ERC-to-ERC.png)
+
+### Watcher
+A watcher listens for a certain event and creates proper jobs in the queue. These jobs contain the transaction data (without the nonce) and the transaction hash for the related event. The watcher runs on a given frequency, keeping track of the last processed block.
+
+If the watcher observes that the transaction data cannot be prepared, which generally means that the corresponding method of the bridge contract cannot be invoked, it inspects the contract state to identify the potential reason for failure and records this in the logs. 
+
+There are three Watchers:
+- **Signature Request Watcher**: Listens to `UserRequestForSignature` events on the Home network.
+- **Collected Signatures Watcher**: Listens to `CollectedSignatures` events on the Home network.
+- **Affirmation Request Watcher**: Listens to `Transfer` events raised by the token contract.
+
+### Sender
+A sender subscribes to the queue and keeps track of the nonce. It takes jobs from the queue, extracts transaction data, adds the proper nonce, and sends it to the network.
+
+There are two Senders:
+- **Home Sender**: Sends a transaction to the `Home` network.
+- **Foreign Sender**: Sends a transaction to the `Foreign` network.
+
+### RabbitMQ
+
+[RabbitMQ](https://www.rabbitmq.com/) is used to transmit jobs from watchers to senders.
+
+### Redis DB
+
+Redis is used to store the number of blocks that were already inspected by watchers, and the Nonce (Number of Operation) which was used previously by the sender to send a transaction.
 
 # How to Use
 
 ## Installation and Deployment
 
+#### Deploy the Bridge Contracts
+
+Go to [contracts](./deployment/contracts) folder and follow instructions.
+
 ### Run Validator software 
 
-Go to [contracts](../deployment/validator) folder and follow instructions.
+Go to [contracts](./deployment/validator) folder and follow instructions.
 
-## Rollback the Last Processed Block in Redis
+### Run Bridge UI
 
-If the bridge does not handle an event properly (i.e. a transaction stalls due to a low gas price), the Redis DB can be rolled back. You must identify which watcher needs to re-run. For example, if the validator signatures were collected but the transaction with signatures was not sent to the Foreign network, the `collected-signatures` watcher must look at the block where the corresponding `CollectedSignatures` event was raised.
-
-Execute this command in the bridge root directory:
-
-for NPM installation:
-```shell
-bash ./reset-lastBlock.sh <watcher> <block num>
-```
-where the _watcher_ could be one of:
-
-- `signature-request`
-- `collected-signatures`
-- `affirmation-request`
+Go to [ui](./deployment/ui) folder and follow instructions.
 
 ## Configuration parameters
 
 | Variable | Description | Values |
 |-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------|
-| `BRIDGE_MODE` | The bridge mode. The bridge starts listening to a different set of events based on this parameter. | `NATIVE_TO_ERC` / `ERC_TO_ERC` / `ERC_TO_NATIVE` |
+| `BRIDGE_MODE` | The bridge mode. The bridge starts listening to a different set of events based on this parameter. | `ERC_TO_ERC` |
 | `HOME_RPC_URL` | The HTTPS URL(s) used to communicate to the RPC nodes in the Home network. Several URLs can be specified, delimited by spaces. If the connection to one of these nodes is lost the next URL is used for connection. | URL(s) |
 | `HOME_BRIDGE_ADDRESS` | The address of the bridge contract address in the Home network. It is used to listen to events from and send validators' transactions to the Home network. | hexidecimal beginning with "0x" |
 | `HOME_POLLING_INTERVAL` | The interval in milliseconds used to request the RPC node in the Home network for new blocks. The interval should match the average production time for a new block. | integer |
@@ -54,58 +106,6 @@ where the _watcher_ could be one of:
 | `ALLOW_HTTP` | **Only use in test environments - must be omitted in production environments.**. If this parameter is specified and set to `yes`, RPC URLs can be specified in form of HTTP links. A warning that the connection is insecure will be written to the logs. | `yes` / `no` |
 | `LOG_LEVEL` | Set the level of details in the logs. | `trace` / `debug` / `info` / `warn` / `error` / `fatal` |
 | `MAX_PROCESSING_TIME` | The workers processes will be killed if this amount of time (in milliseconds) is ellapsed before they finish processing. It is recommended to set this value to 4 times the value of the longest polling time (set with the `HOME_POLLING_INTERVAL` and `FOREIGN_POLLING_INTERVAL` variables). To disable this, set the time to 0. | integer |
-
-## Useful Commands for Development
-
-### RabbitMQ
-Command | Description
---- | ---
-`rabbitmqctl list_queues` | List all queues
-`rabbitmqctl purge_queue home` | Remove all messages from `home` queue
-`rabbitmqctl status` | check if rabbitmq server is currently running  
-`rabbitmq-server`    | start rabbitMQ server  
-
-### Redis
-Use `redis-cli`
-
-Command | Description
---- | ---
-`KEYS *` | Returns all keys
-`SET signature-request:lastProcessedBlock 1234` | Set key to hold the string value.
-`GET signature-request:lastProcessedBlock` | Get the key value.
-`DEL signature-request:lastProcessedBlock` | Removes the specified key.
-`FLUSHALL` | Delete all the keys in all existing databases.
-`redis-cli ping`     | check if redis is running.  
-`redis-server`       | start redis server.  
-
-## Testing
-
-```bash
-npm run test
-```
-
-### ERC20-to-ERC20 Mode Testing
-
-1. `cd ../deployment/validator`
-2. Make sure you have filled TESTING section in `.env`
-3. `docker-compose run bridge sendForeign` to send bridgable token from Foreign to Home
-4. `docker-compose run bridge sendHome` to send bridgable token from Home to Foreign
-
-### Configuration parameters for testing
-
-| Variable | Description |
-|-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `HOME_RPC_URL` | The HTTPS URL(s) used to communicate to the RPC nodes in the Home network. |
-| `FOREIGN_RPC_URL` | The HTTPS URL(s) used to communicate to the RPC nodes in the Foreign network. |
-| `USER_ADDRESS` | An account - the current owner of coins/tokens. |
-| `USER_ADDRESS_PRIVATE_KEY` | A private key belonging to the account. |
-| `HOME_BRIDGE_ADDRESS` | Address of the bridge in the Home network to send transactions. |
-| `HOME_MIN_AMOUNT_PER_TX` | Value (in _eth_ or tokens) to be sent in one transaction for the Home network. This should be greater than or equal to the value specified in the `poa-bridge-contracts/deploy/.env` file. The default value in that file is 500000000000000000, which is equivalent to 0.5. |
-| `HOME_TEST_TX_GAS_PRICE` | The gas price (in Wei) that is used to send transactions in the Home network . |
-| `FOREIGN_BRIDGE_ADDRESS` | Address of the bridge in the Foreign network to send transactions. |
-| `FOREIGN_MIN_AMOUNT_PER_TX` | Value (in _eth_ or tokens) to be sent in one transaction for the Foreign network. This should be greater than or equal to the value specified in the `poa-bridge-contracts/deploy/.env` file. The default value in that file is 500000000000000000, which is equivalent to 0.5. |
-| `FOREIGN_TEST_TX_GAS_PRICE` | The gas price (in Wei) that is used to send transactions in the Foreign network . |
-
 
 ## License
 
