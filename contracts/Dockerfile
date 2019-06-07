@@ -13,5 +13,7 @@ RUN cd ./deploy && npm install && cd ..
 RUN npm run compile
 RUN ./flatten.sh
 
+WORKDIR /app/deploy
+
 ENTRYPOINT ["npm", "run"]
 CMD ["docker-message"]

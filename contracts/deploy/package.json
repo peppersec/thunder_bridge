@@ -4,7 +4,8 @@
   "description": "",
   "main": "deploy.js",
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "deploy": "node deploy.js"
   },
   "author": "",
   "license": "ISC",

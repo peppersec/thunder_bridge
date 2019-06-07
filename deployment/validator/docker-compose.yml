@@ -16,6 +16,14 @@ services:
     volumes: 
       - ./data/redis:/data
 
+  bridge:
+    image: thundercore/bridge
+    build: ../../validator
+    restart: always
+    environment:
+      - NODE_ENV=production
+    env_file: ./.env
+
   bridge_request:
     image: thundercore/bridge
     build: ../../validator
