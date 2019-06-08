@@ -75,10 +75,10 @@ async function checkWorker(token) {
     const getBalances = require('./getBalances')(context)
     const getShortEventStats = require('./getShortEventStats')(context)
     const validators = require('./validators')(context)
-    const eventsStats = require('./eventsStats')(context)
-    const getAlerts = require('./alerts')(context)
+    // const eventsStats = require('./eventsStats')(context)
+    // const getAlerts = require('./alerts')(context)
 
-    const result = {};
+
     const homeBridge = new web3Home.eth.Contract(HOME_ERC_TO_ERC_ABI, HOME_BRIDGE_ADDRESS)
     const bridgeModeHash = await homeBridge.methods.getBridgeMode().call()
     const bridgeMode = decodeBridgeMode(bridgeModeHash)
@@ -94,7 +94,9 @@ async function checkWorker(token) {
     // if (!evStats) throw new Error('evStats is empty: ' + JSON.stringify(evStats))
     // const alerts = await getAlerts()
     // if (!alerts) throw new Error('alerts is empty: ' + JSON.stringify(alerts))
-    updateAllData(deepmerge(status, vBalances), token)
+    const res = deepmerge(status, vBalances);
+    console.log(token, JSON.stringify(vBalances, null, 4));
+    updateAllData(res, token)
     return {status, vBalances}
   } catch (e) {
     throw e
@@ -144,10 +146,11 @@ function updateTokens(){
     checkWorker(token);
 }
 setInterval(updateTokens, 120000);
-updateTokens();
+updateTokens()
 
 
 const server = express();
+console.log("Hosted at http://127.0.0.1:8080/")
 server.get('/metrics', (req, res) => {
     res.set('Content-Type', registry.contentType);
     res.end(registry.metrics());
