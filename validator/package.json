@@ -16,8 +16,8 @@
     "coverage": "NODE_ENV=test nyc --reporter=text --reporter=html mocha",
     "postinstall": "npm install --prefix e2e && mkdir -p logs",
     "docker-message": "echo 'Please run a valid npm command'",
-    "sendForeign": "node scripts/erc20_to_erc20/sendForeign.js",
-    "sendHome": "node scripts/erc20_to_erc20/sendHome.js"
+    "sendFromForeignToHome": "node scripts/erc20_to_erc20/sendFromForeignToHome.js",
+    "sendFromHomeToForeign": "node scripts/erc20_to_erc20/sendFromHomeToForeign.js"
   },
   "author": "",
   "license": "ISC",

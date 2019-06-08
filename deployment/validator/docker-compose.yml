@@ -19,7 +19,7 @@ services:
   bridge:
     image: thundercore/bridge
     build: ../../validator
-    restart: always
+    restart: 'no'
     environment:
       - NODE_ENV=production
     env_file: ./.env

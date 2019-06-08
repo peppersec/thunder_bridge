@@ -13,7 +13,8 @@ const {
   USER_ADDRESS_PRIVATE_KEY,
   HOME_BRIDGE_ADDRESS,
   HOME_MIN_AMOUNT_PER_TX,
-  HOME_TEST_TX_GAS_PRICE
+  HOME_TEST_TX_GAS_PRICE,
+  FOREIGN_CUSTOM_RECIPIENT
 } = process.env
 
 const NUMBER_OF_WITHDRAWALS_TO_SEND =
@@ -76,12 +77,16 @@ async function main() {
     nonce = Web3Utils.hexToNumber(nonce)
     let actualSent = 0
     for (let i = 0; i < Number(NUMBER_OF_WITHDRAWALS_TO_SEND); i++) {
-      const gasLimit = await erc677.methods
+      let gasLimit = await erc677.methods
         .transferAndCall(HOME_BRIDGE_ADDRESS, Web3Utils.toWei(HOME_MIN_AMOUNT_PER_TX), '0x')
         .estimateGas({ from: USER_ADDRESS })
-      const data = await erc677.methods
+      let data = await erc677.methods
         .transferAndCall(HOME_BRIDGE_ADDRESS, Web3Utils.toWei(HOME_MIN_AMOUNT_PER_TX), '0x')
         .encodeABI({ from: USER_ADDRESS })
+      if (FOREIGN_CUSTOM_RECIPIENT) {
+        data += `000000000000000000000000${FOREIGN_CUSTOM_RECIPIENT.slice(2)}`
+        gasLimit += 50000
+      }
       const txHash = await sendTx({
         chain: 'home',
         privateKey: USER_ADDRESS_PRIVATE_KEY,
