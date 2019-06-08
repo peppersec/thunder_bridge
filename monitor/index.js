@@ -22,7 +22,7 @@ function mkDict(pairs) {
 }
 
 function mkGaugedataRow(names, labelNames) {
-  return mkDict(names.map(name => [name, {name, help:name, labelNames}]))
+  return mkDict(names.map(name => [name, {name: "bridge_" + name, help:name, labelNames}]))
 }
 
 const gauges = {}
@@ -30,11 +30,11 @@ const gauges = {}
 
 
 const G_STATUSBRIDGES = mkGaugedataRow(["totalSupply", "deposits", "withdrawals", "requiredSignatures"], ["network", "token"]);
-const G_STATUS = mkGaugedataRow(["balanceDiff", "lastChecked", "depositsDiff", "withdrawalDiff", "requiredSignaturesMatch", "validatorsMatch"], ["token"]);
+const G_STATUS = mkGaugedataRow(["balanceDiff", "lastChecked", "requiredSignaturesMatch", "validatorsMatch"], ["token"]);
 const G_VALIDATORS = mkGaugedataRow(["balance", "leftTx", "gasPrice"], ["network", "token", "validator"]);
 
 
-function updateRegistry(gaugeRow, name, tags, value){
+function updateRegistry(gaugeRow, name, tags, value, date){
   const gd = gaugeRow[name];
   const g = (name in gauges) ? gauges[name] : (function(){
     const ng = new client.Gauge(gd);
@@ -44,21 +44,24 @@ function updateRegistry(gaugeRow, name, tags, value){
   })();
 
   if (typeof(value)!=="undefined")
-    g.set(mkDict(gd.labelNames.map(s => [s, tags[s]])), Number(value));
+    g.set(mkDict(gd.labelNames.map(s => [s, tags[s]])), Number(value), date);
 }
 
 
 
 function updateAllData(data, token) {
+  // calculating date once so that all metrics in this iteration have the exact same timestamp
+  const date = new Date();
+
   for(let name in G_STATUS)
-    updateRegistry(G_STATUS, name, {token}, data[name]);
+    updateRegistry(G_STATUS, name, {token}, data[name], date);
 
   ["home", "foreign"].forEach(network => {
     for(let name in G_STATUSBRIDGES) 
-      updateRegistry(G_STATUSBRIDGES, name, {network, token}, data[network][name]);
+      updateRegistry(G_STATUSBRIDGES, name, {network, token}, data[network][name], date);
     for(let validator in data[network]["validators"])
       for(let name in G_VALIDATORS)
-        updateRegistry(G_VALIDATORS, name, {network, token, validator}, data[network]["validators"][validator][name])
+        updateRegistry(G_VALIDATORS, name, {network, token, validator}, data[network]["validators"][validator][name], date)
   });
 }
 
@@ -75,10 +78,10 @@ async function checkWorker(token) {
     const getBalances = require('./getBalances')(context)
     const getShortEventStats = require('./getShortEventStats')(context)
     const validators = require('./validators')(context)
-    // const eventsStats = require('./eventsStats')(context)
-    // const getAlerts = require('./alerts')(context)
+    const eventsStats = require('./eventsStats')(context)
+    const getAlerts = require('./alerts')(context)
 
-
+    const result = {};
     const homeBridge = new web3Home.eth.Contract(HOME_ERC_TO_ERC_ABI, HOME_BRIDGE_ADDRESS)
     const bridgeModeHash = await homeBridge.methods.getBridgeMode().call()
     const bridgeMode = decodeBridgeMode(bridgeModeHash)
@@ -94,8 +97,8 @@ async function checkWorker(token) {
     // if (!evStats) throw new Error('evStats is empty: ' + JSON.stringify(evStats))
     // const alerts = await getAlerts()
     // if (!alerts) throw new Error('alerts is empty: ' + JSON.stringify(alerts))
-    const res = deepmerge(status, vBalances);
-    console.log(token, JSON.stringify(vBalances, null, 4));
+    updateAllData(deepmerge(status, vBalances), token)
+    return {status, vBalances}
     updateAllData(res, token)
     return {status, vBalances}
   } catch (e) {
@@ -146,13 +149,12 @@ function updateTokens(){
     checkWorker(token);
 }
 setInterval(updateTokens, 120000);
-updateTokens()
+updateTokens();
 
 
 const server = express();
-console.log("Hosted at http://127.0.0.1:8080/")
 server.get('/metrics', (req, res) => {
     res.set('Content-Type', registry.contentType);
     res.end(registry.metrics());
 });
-server.listen(8080);
+server.listen(3000);

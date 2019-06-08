@@ -48,7 +48,7 @@ services:
 
   monitor:
     image: thundercore/bridge-monitor
-    build: ../../monitor
+    build: ../../monitor.old
     restart: always
     env_file: ./.env
 

@@ -14,7 +14,7 @@ docker-compose run contracts deploy
 - Note new contract addresses in console and in addresses.json file, you will
   need to put deployed addresses into your `.env` files in other modules
 
-## Bridge
+## Validator
 - Open `bridge` dir
 - Customize `.env` file as needed
 - Launch the bridge
