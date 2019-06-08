@@ -52,7 +52,7 @@
   {
     "constant": true,
     "inputs": [],
-    "name": "validatorList",
+    "name": "validatorsList",
     "outputs": [
       {
         "name": "",
