@@ -1,28 +1,3 @@
-# How to Deploy Bridge Contracts
-
-In order to deploy bridge contracts you must run `npm install` to install all dependencies.
-
-1. Compile the source contracts.
-```
-cd ..
-npm run compile
-```
-
-2. Create a `.env` file.
-```
-cd deploy
-cp .env.example .env
-```
-
-3. If necessary, deploy and configure a multi-sig wallet contract to manage the bridge contracts after deployment. We have not audited any wallets for security, but have used https://github.com/gnosis/MultiSigWallet/ with success.
-
-4. Adjust the parameters in the `.env` file depending on the desired bridge mode. See below for comments related to each parameter.
-
-5. Add funds to the deployment accounts in both theHome and Foreign networks.
-
-6. Run `node deploy.js`.
-
-
 ## `ERC-TO-ERC` Bridge Mode Configuration Example.
 
 This example of an `.env` file for the `erc-to-erc` bridge mode includes comments describing each parameter.
@@ -83,8 +58,8 @@ HOME_REQUIRED_BLOCK_CONFIRMATIONS=1
 # transactions for deposit or withdrawal confirmations. This price is used if
 # the Gas price oracle is unreachable.
 HOME_GAS_PRICE=1000000000
-# Fee percent on the Home side. User will be charged in tokens. The value has 2
-# decimal places. e.g. 500 means 5%
+# Fee percent on the Home side (user will be charged during Foreign to Home). 
+# User will be charged in tokens. The value has 2 decimal places. e.g. 500 means 5%
 HOME_FEE_PERCENT=500
 
 # The RPC channel to a Foreign node able to handle deployment/configuration
@@ -114,8 +89,8 @@ FOREIGN_GAS_PRICE=10000000000
 # be exchanged to the ERC20/ERC677 token deployed on Home.
 ERC20_TOKEN_ADDRESS=0x
 
-# Fee percent on the Foreign side. User will be charged in tokens. The value has 2
-# decimal places. e.g. 500 means 5%
+# Fee percent on the Foreign side (user will be charged during Home to Foreign).
+# User will be charged in tokens. The value has 2 decimal places. e.g. 500 means 5%
 FOREIGN_FEE_PERCENT=500
 
 # The minimum number of validators required to send their signatures confirming
