@@ -71,8 +71,6 @@ function main({ HOME_RPC_URL, FOREIGN_RPC_URL, HOME_BRIDGE_ADDRESS, FOREIGN_BRID
               options: {}
             })
       return {
-        depositsDiff: homeDeposits.length - foreignDeposits.length,
-        withdrawalDiff: homeWithdrawals.length - foreignWithdrawals.length,
         home: {
           deposits: homeDeposits.length,
           withdrawals: homeWithdrawals.length

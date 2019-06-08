@@ -22,7 +22,7 @@ function mkDict(pairs) {
 }
 
 function mkGaugedataRow(names, labelNames) {
-  return mkDict(names.map(name => [name, {name, help:name, labelNames}]))
+  return mkDict(names.map(name => [name, {name: "bridge_" + name, help:name, labelNames}]))
 }
 
 const gauges = {}
@@ -30,11 +30,11 @@ const gauges = {}
 
 
 const G_STATUSBRIDGES = mkGaugedataRow(["totalSupply", "deposits", "withdrawals", "requiredSignatures"], ["network", "token"]);
-const G_STATUS = mkGaugedataRow(["balanceDiff", "lastChecked", "depositsDiff", "withdrawalDiff", "requiredSignaturesMatch", "validatorsMatch"], ["token"]);
+const G_STATUS = mkGaugedataRow(["balanceDiff", "lastChecked", "requiredSignaturesMatch", "validatorsMatch"], ["token"]);
 const G_VALIDATORS = mkGaugedataRow(["balance", "leftTx", "gasPrice"], ["network", "token", "validator"]);
 
 
-function updateRegistry(gaugeRow, name, tags, value){
+function updateRegistry(gaugeRow, name, tags, value, date){
   const gd = gaugeRow[name];
   const g = (name in gauges) ? gauges[name] : (function(){
     const ng = new client.Gauge(gd);
@@ -44,21 +44,24 @@ function updateRegistry(gaugeRow, name, tags, value){
   })();
 
   if (typeof(value)!=="undefined")
-    g.set(mkDict(gd.labelNames.map(s => [s, tags[s]])), Number(value));
+    g.set(mkDict(gd.labelNames.map(s => [s, tags[s]])), Number(value), date);
 }
 
 
 
 function updateAllData(data, token) {
+  // calculating date once so that all metrics in this iteration have the exact same timestamp
+  const date = new Date();
+
   for(let name in G_STATUS)
-    updateRegistry(G_STATUS, name, {token}, data[name]);
+    updateRegistry(G_STATUS, name, {token}, data[name], date);
 
   ["home", "foreign"].forEach(network => {
     for(let name in G_STATUSBRIDGES) 
-      updateRegistry(G_STATUSBRIDGES, name, {network, token}, data[network][name]);
+      updateRegistry(G_STATUSBRIDGES, name, {network, token}, data[network][name], date);
     for(let validator in data[network]["validators"])
       for(let name in G_VALIDATORS)
-        updateRegistry(G_VALIDATORS, name, {network, token, validator}, data[network]["validators"][validator][name])
+        updateRegistry(G_VALIDATORS, name, {network, token, validator}, data[network]["validators"][validator][name], date)
   });
 }
 
@@ -152,4 +155,4 @@ server.get('/metrics', (req, res) => {
     res.set('Content-Type', registry.contentType);
     res.end(registry.metrics());
 });
-server.listen(8080);
+server.listen(3000);
