@@ -12,7 +12,8 @@ const {
   USER_ADDRESS_PRIVATE_KEY,
   FOREIGN_BRIDGE_ADDRESS,
   FOREIGN_MIN_AMOUNT_PER_TX,
-  FOREIGN_TEST_TX_GAS_PRICE
+  FOREIGN_TEST_TX_GAS_PRICE,
+  FOREIGN_ARBITRARY_RECIPIENT
 } = process.env
 
 const NUMBER_OF_DEPOSITS_TO_SEND = process.argv[2] || process.env.NUMBER_OF_DEPOSITS_TO_SEND || 1
@@ -29,6 +30,14 @@ async function main() {
   const ERC20_TOKEN_ADDRESS = await bridge.methods.erc20token().call()
   const poa20 = new web3Foreign.eth.Contract(ERC20_ABI, ERC20_TOKEN_ADDRESS)
 
+  if (FOREIGN_ARBITRARY_RECIPIENT) {
+    const index = ERC20_ABI.findIndex(entry => entry.name === 'transfer')
+    ERC20_ABI[index].inputs.push({
+      name: 'recipient',
+      type: 'address'
+    })
+  }
+
   try {
     const foreignChaindId = await sendRawTx({
       chain: 'foreign',
@@ -43,12 +52,18 @@ async function main() {
     nonce = Web3Utils.hexToNumber(nonce)
     let actualSent = 0
     for (let i = 0; i < Number(NUMBER_OF_DEPOSITS_TO_SEND); i++) {
-      const gasLimit = await poa20.methods
-        .transfer(FOREIGN_BRIDGE_ADDRESS, Web3Utils.toWei(FOREIGN_MIN_AMOUNT_PER_TX))
-        .estimateGas({ from: USER_ADDRESS })
-      const data = await poa20.methods
-        .transfer(FOREIGN_BRIDGE_ADDRESS, Web3Utils.toWei(FOREIGN_MIN_AMOUNT_PER_TX))
-        .encodeABI({ from: USER_ADDRESS })
+      let params
+      if (FOREIGN_ARBITRARY_RECIPIENT) {
+        params = [
+          FOREIGN_BRIDGE_ADDRESS,
+          Web3Utils.toWei(FOREIGN_MIN_AMOUNT_PER_TX),
+          FOREIGN_ARBITRARY_RECIPIENT
+        ]
+      } else {
+        params = [FOREIGN_BRIDGE_ADDRESS, Web3Utils.toWei(FOREIGN_MIN_AMOUNT_PER_TX)]
+      }
+      const gasLimit = await poa20.methods.transfer(...params).estimateGas({ from: USER_ADDRESS })
+      const data = await poa20.methods.transfer(...params).encodeABI({ from: USER_ADDRESS })
       const txHash = await sendTx({
         chain: 'foreign',
         privateKey: USER_ADDRESS_PRIVATE_KEY,

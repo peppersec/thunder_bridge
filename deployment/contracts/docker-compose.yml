@@ -5,5 +5,3 @@ services:
     image: thundercore/bridge-contracts
     build: ../../contracts
     env_file: ./.env
-    volumes:
-      - ./result.json:/app/deploy/bridgeDeploymentResults.json
