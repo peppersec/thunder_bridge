@@ -67,15 +67,15 @@ Redis is used to store the number of blocks that were already inspected by watch
 
 #### Deploy the Bridge Contracts
 
-Go to [contracts](./deployment/contracts) folder and follow instructions.
+Go to [deployment](./deployment) folder and follow instructions in **Contracts** section.
 
 ### Run Validator software 
 
-Go to [contracts](./deployment/validator) folder and follow instructions.
+Go to [deployment](./deployment) folder and follow instructions in **Validator** section.
 
 ### Run Bridge UI
 
-Go to [ui](./deployment/ui) folder and follow instructions.
+Go to [deployment](./deployment) folder and follow instructions in **User interface** section.
 
 ## License
 

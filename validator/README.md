@@ -7,7 +7,7 @@
 
 ### Run Validator software 
 
-Go to [contracts](../deployment/validator) folder and follow instructions.
+Go to [deployment](./deployment) folder and follow instructions in **Validator** section.
 
 ## Rollback the Last Processed Block in Redis
 
@@ -29,7 +29,7 @@ where the _watcher_ could be one of:
 
 | Variable | Description | Values |
 |-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------|
-| `BRIDGE_MODE` | The bridge mode. The bridge starts listening to a different set of events based on this parameter. | `NATIVE_TO_ERC` / `ERC_TO_ERC` / `ERC_TO_NATIVE` |
+| `BRIDGE_MODE` | The bridge mode. The bridge starts listening to a different set of events based on this parameter. | `ERC_TO_ERC` |
 | `HOME_RPC_URL` | The HTTPS URL(s) used to communicate to the RPC nodes in the Home network. Several URLs can be specified, delimited by spaces. If the connection to one of these nodes is lost the next URL is used for connection. | URL(s) |
 | `HOME_BRIDGE_ADDRESS` | The address of the bridge contract address in the Home network. It is used to listen to events from and send validators' transactions to the Home network. | hexidecimal beginning with "0x" |
 | `HOME_POLLING_INTERVAL` | The interval in milliseconds used to request the RPC node in the Home network for new blocks. The interval should match the average production time for a new block. | integer |

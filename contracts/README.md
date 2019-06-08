@@ -45,7 +45,7 @@ Responsibilities and roles of the bridge:
 
 ## Usage
 
-Go to [contracts](./deployment/contracts) folder and follow instructions.
+Go to [deployment](./deployment) folder and follow instructions in **Contracts** section.
 
 #### Test
 ```bash
