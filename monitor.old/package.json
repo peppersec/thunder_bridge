@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node prom-server.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
@@ -12,12 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "bignumber.js": "^6.0.0",
-    "deepmerge": "^3.2.0",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "node-fetch": "^2.1.2",
     "prom-client": "^11.5.0",
-    "typedarray-to-buffer": "^3.1.5",
     "web3": "1.0.0-beta.34"
   },
   "engines": {

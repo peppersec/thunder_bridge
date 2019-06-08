@@ -1,106 +1,158 @@
-const config = (process.argv.length>=3) ? {path: process.argv[process.argv.length-2]} : undefined;
-const prefix = (process.argv.length>1) ? process.argv[process.argv.length-1] : "";
+const express = require('express');
+const client = require('prom-client');
+const deepmerge = require('deepmerge');
 
-require('dotenv').config(config)
-const express = require('express')
-const fs = require('fs')
+const Web3 = require('web3')
+const { decodeBridgeMode } = require('./utils/bridgeMode')
 
-const app = express()
+const {readFileSync} = require('fs');
 
-const LEFT_TX_THRESHOLD = Number(process.env.LEFT_TX_THRESHOLD) || 100
-console.log('LEFT_TX_THRESHOLD = ' + LEFT_TX_THRESHOLD)
+const config = JSON.parse(readFileSync("config.json", "utf8"));
 
-async function readFile(path) {
+const registry = new client.Registry();
+
+
+function mkDict(pairs) {
+  const res = {}
+  for (let i in pairs) {
+    const p = pairs[i];
+    res[p[0]]=p[1];
+  }
+  return res;
+}
+
+function mkGaugedataRow(names, labelNames) {
+  return mkDict(names.map(name => [name, {name: "bridge_" + name, help:name, labelNames}]))
+}
+
+const gauges = {}
+
+
+
+const G_STATUSBRIDGES = mkGaugedataRow(["totalSupply", "deposits", "withdrawals", "requiredSignatures"], ["network", "token"]);
+const G_STATUS = mkGaugedataRow(["balanceDiff", "lastChecked", "requiredSignaturesMatch", "validatorsMatch"], ["token"]);
+const G_VALIDATORS = mkGaugedataRow(["balance", "leftTx", "gasPrice"], ["network", "token", "validator"]);
+
+
+function updateRegistry(gaugeRow, name, tags, value, date){
+  const gd = gaugeRow[name];
+  const g = (name in gauges) ? gauges[name] : (function(){
+    const ng = new client.Gauge(gd);
+    gauges[name]=ng;
+    registry.registerMetric(ng);
+    return ng;
+  })();
+
+  if (typeof(value)!=="undefined")
+    g.set(mkDict(gd.labelNames.map(s => [s, tags[s]])), Number(value), date);
+}
+
+
+
+function updateAllData(data, token) {
+  // calculating date once so that all metrics in this iteration have the exact same timestamp
+  const date = new Date();
+
+  for(let name in G_STATUS)
+    updateRegistry(G_STATUS, name, {token}, data[name], date);
+
+  ["home", "foreign"].forEach(network => {
+    for(let name in G_STATUSBRIDGES) 
+      updateRegistry(G_STATUSBRIDGES, name, {network, token}, data[network][name], date);
+    for(let validator in data[network]["validators"])
+      for(let name in G_VALIDATORS)
+        updateRegistry(G_VALIDATORS, name, {network, token, validator}, data[network]["validators"][validator][name], date)
+  });
+}
+
+
+async function checkWorker(token) {
+  const context = config[token];
   try {
-    const content = await fs.readFileSync(path)
-    const json = JSON.parse(content)
-    const timeDiff = Math.floor(Date.now() / 1000) - json.lastChecked
-    return Object.assign({}, json, { timeDiff })
+    const { HOME_BRIDGE_ADDRESS, HOME_RPC_URL }  = context;
+    const homeProvider = new Web3.providers.HttpProvider(HOME_RPC_URL)
+    const web3Home = new Web3(homeProvider)
+    
+    const HOME_ERC_TO_ERC_ABI = require('./abis/HomeBridgeErcToErc.abi')
+    
+    const getBalances = require('./getBalances')(context)
+    const getShortEventStats = require('./getShortEventStats')(context)
+    const validators = require('./validators')(context)
+    const eventsStats = require('./eventsStats')(context)
+    const getAlerts = require('./alerts')(context)
+
+    const result = {};
+    const homeBridge = new web3Home.eth.Contract(HOME_ERC_TO_ERC_ABI, HOME_BRIDGE_ADDRESS)
+    const bridgeModeHash = await homeBridge.methods.getBridgeMode().call()
+    const bridgeMode = decodeBridgeMode(bridgeModeHash)
+    const balances = await getBalances(bridgeMode)
+    const events = await getShortEventStats(bridgeMode)
+    const home = Object.assign({}, balances.home, events.home)
+    const foreign = Object.assign({}, balances.foreign, events.foreign)
+    const status = Object.assign({}, balances, events, { home }, { foreign })
+    if (!status) throw new Error('status is empty: ' + JSON.stringify(status))
+    const vBalances = await validators(bridgeMode)
+    if (!vBalances) throw new Error('vBalances is empty: ' + JSON.stringify(vBalances))
+    // const evStats = await eventsStats()
+    // if (!evStats) throw new Error('evStats is empty: ' + JSON.stringify(evStats))
+    // const alerts = await getAlerts()
+    // if (!alerts) throw new Error('alerts is empty: ' + JSON.stringify(alerts))
+    updateAllData(deepmerge(status, vBalances), token)
+    return {status, vBalances}
   } catch (e) {
-    console.error(e)
-    return {
-      error: 'please check your worker'
-    }
+    throw e
   }
 }
 
-app.get('/', async (req, res, next) => {
-  try {
-    const results = await readFile('./responses/getBalances_final.dat')
-    res.send(results)
-  } catch (e) {
-    // this will eventually be handled by your error handling middleware
-    next(e)
-  }
-})
 
-app.get('/validators', async (req, res, next) => {
-  try {
-    const results = await readFile('./responses/validators_final.dat')
-    results.homeOk = true
-    results.foreignOk = true
-    for (const hv in results.home.validators) {
-      if (results.home.validators[hv].leftTx < LEFT_TX_THRESHOLD) {
-        results.homeOk = false
-        break
-      }
-    }
-    for (const hv in results.foreign.validators) {
-      if (results.foreign.validators[hv].leftTx < LEFT_TX_THRESHOLD) {
-        results.foreignOk = false
-        break
-      }
-    }
-    results.ok = results.homeOk && results.foreignOk
-    res.json(results)
-  } catch (e) {
-    // this will eventually be handled by your error handling middleware
-    next(e)
-  }
-})
+// let testdata = {
+//   "home": {
+//       "totalSupply": "0.000009",
+//       "deposits": 2,
+//       "withdrawals": 2,
+//       "validators": {
+//           "0x553963b10b2a65d221d2648dfdfb76b2fc222bf4": {
+//               "balance": "1.165825823912",
+//               "leftTx": 3886086079706,
+//               "gasPrice": 1
+//           }
+//       },
+//       "requiredSignatures": 1
+//   },
+//   "foreign": {
+//       "erc20Balance": "0.000009",
+//       "deposits": 2,
+//       "withdrawals": 2,
+//       "validators": {
+//           "0x553963b10b2a65d221d2648dfdfb76b2fc222bf4": {
+//               "balance": "0.994104141",
+//               "leftTx": 3012,
+//               "gasPrice": 1.1
+//           }
+//       },
+//       "requiredSignatures": 1
+//   },
+//   "balanceDiff": 0,
+//   "lastChecked": 1559936292,
+//   "depositsDiff": 0,
+//   "withdrawalDiff": 0,
+//   "requiredSignaturesMatch": true,
+//   "validatorsMatch": true
+// }
 
-// responses/eventsStats.json
-app.get('/eventsStats', async (req, res, next) => {
-  try {
-    const results = await readFile('./responses/eventsStats_final.dat')
-    results.ok =
-      results.onlyInHomeDeposits.length === 0 &&
-      results.onlyInForeignDeposits.length === 0 &&
-      results.onlyInHomeWithdrawals.length === 0 &&
-      results.onlyInForeignWithdrawals.length === 0
-    res.json(results)
-  } catch (e) {
-    // this will eventually be handled by your error handling middleware
-    next(e)
-  }
-})
+// updateAllData(testdata, "token1");
 
-app.get('/alerts', async (req, res, next) => {
-  try {
-    const results = await readFile('./responses/alerts_final.dat')
-    results.ok =
-      !results.executeAffirmations.mostRecentTxHash && !results.executeSignatures.mostRecentTxHash
-    res.json(results)
-  } catch (e) {
-    next(e)
-  }
-})
+function updateTokens(){
+  for(let token in config)
+    checkWorker(token);
+}
+setInterval(updateTokens, 120000);
+updateTokens();
 
-// responses/stuckTransfers.json
-// Only applicable for bridge-rust-v1-native-to-erc
-/*
-app.get('/stuckTransfers', async (req, res, next) => {
-  try {
-    const results = await readFile('./responses/stuckTransfers.json')
-    results.ok = results.total.length === 0
-    res.json(results)
-  } catch (e) {
-    // this will eventually be handled by your error handling middleware
-    next(e)
-  }
-})
-*/
 
-const port = process.env.PORT || 3000
-app.set('port', port)
-app.listen(port, () => console.log('Monitoring app listening on port 3000!'))
+const server = express();
+server.get('/metrics', (req, res) => {
+    res.set('Content-Type', registry.contentType);
+    res.end(registry.metrics());
+});
+server.listen(3000);

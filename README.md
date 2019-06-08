@@ -13,7 +13,7 @@ The Bridge allows users to transfer assets between two chains in the Ethereum ec
 1. The TokenBridge contained in this repository.
 2. [Solidity smart contracts](./contracts). Used to manage bridge validators, collect signatures, and confirm asset relay and disposal.
 3. [Bridge UI Application](./ui). A DApp interface to transfer tokens and coins between chains.
-4. [Bridge Monitor](./monitor). A tool for checking balances and unprocessed events in bridged networks.
+4. [Bridge Monitor](monitor.old). A tool for checking balances and unprocessed events in bridged networks.
 5. [Bridge Deployment](./deployment). Manages configuration instructions for deployment.
 
 ## Network Definitions
