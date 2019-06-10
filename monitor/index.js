@@ -5,7 +5,7 @@ const deepmerge = require('deepmerge');
 const Web3 = require('web3')
 const { decodeBridgeMode } = require('./utils/bridgeMode')
 
-const {readFileSync} = require('fs');
+const { readFileSync } = require('fs');
 
 const config = JSON.parse(readFileSync("config.json", "utf8"));
 
@@ -16,13 +16,22 @@ function mkDict(pairs) {
   const res = {}
   for (let i in pairs) {
     const p = pairs[i];
-    res[p[0]]=p[1];
+    res[p[0]] = p[1];
   }
   return res;
 }
 
+function hasDeepKeys(obj, keys) {
+  let cur = obj;
+  for (let i in keys) {
+    if ((typeof (cur) !== "object") || !(keys[i] in cur)) return false;
+    cur = cur[keys[i]];
+  }
+  return true;
+}
+
 function mkGaugedataRow(names, labelNames) {
-  return mkDict(names.map(name => [name, {name: "bridge_" + name, help:name, labelNames}]))
+  return mkDict(names.map(name => [name, { name: "bridge_" + name, help: name, labelNames }]))
 }
 
 const gauges = {}
@@ -34,16 +43,16 @@ const G_STATUS = mkGaugedataRow(["balanceDiff", "lastChecked", "requiredSignatur
 const G_VALIDATORS = mkGaugedataRow(["balance", "leftTx", "gasPrice"], ["network", "token", "validator"]);
 
 
-function updateRegistry(gaugeRow, name, tags, value, date){
+function updateRegistry(gaugeRow, name, tags, value, date) {
   const gd = gaugeRow[name];
-  const g = (name in gauges) ? gauges[name] : (function(){
+  const g = (name in gauges) ? gauges[name] : (function () {
     const ng = new client.Gauge(gd);
-    gauges[name]=ng;
+    gauges[name] = ng;
     registry.registerMetric(ng);
     return ng;
   })();
 
-  if (typeof(value)!=="undefined")
+  if (typeof (value) !== "undefined")
     g.set(mkDict(gd.labelNames.map(s => [s, tags[s]])), Number(value), date);
 }
 
@@ -53,35 +62,32 @@ function updateAllData(data, token) {
   // calculating date once so that all metrics in this iteration have the exact same timestamp
   const date = new Date();
 
-  for(let name in G_STATUS)
-    updateRegistry(G_STATUS, name, {token}, data[name], date);
+  for (let name in G_STATUS)
+    if (name in data)
+      updateRegistry(G_STATUS, name, { token }, data[name], date);
 
   ["home", "foreign"].forEach(network => {
-    for(let name in G_STATUSBRIDGES) 
-      updateRegistry(G_STATUSBRIDGES, name, {network, token}, data[network][name], date);
-    for(let validator in data[network]["validators"])
-      for(let name in G_VALIDATORS)
-        updateRegistry(G_VALIDATORS, name, {network, token, validator}, data[network]["validators"][validator][name], date)
+    for (let name in G_STATUSBRIDGES)
+      if (hasDeepKeys(data, [network, name]))
+        updateRegistry(G_STATUSBRIDGES, name, { network, token }, data[network][name], date);
+
+    for (let validator in data[network]["validators"])
+      for (let name in G_VALIDATORS)
+        if (hasDeepKeys(data, [network, "validators", validator, name]))
+          updateRegistry(G_VALIDATORS, name, { network, token, validator }, data[network]["validators"][validator][name], date)
   });
 }
 
 
-async function checkWorker(token) {
+async function checkStatus(token) {
   const context = config[token];
   try {
-    const { HOME_BRIDGE_ADDRESS, HOME_RPC_URL }  = context;
+    const { HOME_BRIDGE_ADDRESS, HOME_RPC_URL } = context;
     const homeProvider = new Web3.providers.HttpProvider(HOME_RPC_URL)
     const web3Home = new Web3(homeProvider)
-    
     const HOME_ERC_TO_ERC_ABI = require('./abis/HomeBridgeErcToErc.abi')
-    
     const getBalances = require('./getBalances')(context)
     const getShortEventStats = require('./getShortEventStats')(context)
-    const validators = require('./validators')(context)
-    const eventsStats = require('./eventsStats')(context)
-    const getAlerts = require('./alerts')(context)
-
-    const result = {};
     const homeBridge = new web3Home.eth.Contract(HOME_ERC_TO_ERC_ABI, HOME_BRIDGE_ADDRESS)
     const bridgeModeHash = await homeBridge.methods.getBridgeMode().call()
     const bridgeMode = decodeBridgeMode(bridgeModeHash)
@@ -91,62 +97,42 @@ async function checkWorker(token) {
     const foreign = Object.assign({}, balances.foreign, events.foreign)
     const status = Object.assign({}, balances, events, { home }, { foreign })
     if (!status) throw new Error('status is empty: ' + JSON.stringify(status))
-    const vBalances = await validators(bridgeMode)
-    if (!vBalances) throw new Error('vBalances is empty: ' + JSON.stringify(vBalances))
-    // const evStats = await eventsStats()
-    // if (!evStats) throw new Error('evStats is empty: ' + JSON.stringify(evStats))
-    // const alerts = await getAlerts()
-    // if (!alerts) throw new Error('alerts is empty: ' + JSON.stringify(alerts))
-    updateAllData(deepmerge(status, vBalances), token)
-    return {status, vBalances}
-    updateAllData(res, token)
-    return {status, vBalances}
+    updateAllData(status, token)
+    return status
   } catch (e) {
     throw e
   }
 }
 
 
-// let testdata = {
-//   "home": {
-//       "totalSupply": "0.000009",
-//       "deposits": 2,
-//       "withdrawals": 2,
-//       "validators": {
-//           "0x553963b10b2a65d221d2648dfdfb76b2fc222bf4": {
-//               "balance": "1.165825823912",
-//               "leftTx": 3886086079706,
-//               "gasPrice": 1
-//           }
-//       },
-//       "requiredSignatures": 1
-//   },
-//   "foreign": {
-//       "erc20Balance": "0.000009",
-//       "deposits": 2,
-//       "withdrawals": 2,
-//       "validators": {
-//           "0x553963b10b2a65d221d2648dfdfb76b2fc222bf4": {
-//               "balance": "0.994104141",
-//               "leftTx": 3012,
-//               "gasPrice": 1.1
-//           }
-//       },
-//       "requiredSignatures": 1
-//   },
-//   "balanceDiff": 0,
-//   "lastChecked": 1559936292,
-//   "depositsDiff": 0,
-//   "withdrawalDiff": 0,
-//   "requiredSignaturesMatch": true,
-//   "validatorsMatch": true
-// }
+async function checkVBalances(token) {
+  const context = config[token];
+  try {
+    const { HOME_BRIDGE_ADDRESS, HOME_RPC_URL } = context;
+    const homeProvider = new Web3.providers.HttpProvider(HOME_RPC_URL)
+    const web3Home = new Web3(homeProvider)
+    const HOME_ERC_TO_ERC_ABI = require('./abis/HomeBridgeErcToErc.abi')
+    const validators = require('./validators')(context)
+    const homeBridge = new web3Home.eth.Contract(HOME_ERC_TO_ERC_ABI, HOME_BRIDGE_ADDRESS)
+    const bridgeModeHash = await homeBridge.methods.getBridgeMode().call()
+    const bridgeMode = decodeBridgeMode(bridgeModeHash)
+    const vBalances = await validators(bridgeMode)
+    if (!vBalances) throw new Error('vBalances is empty: ' + JSON.stringify(vBalances))
+    updateAllData(vBalances, token)
+    return vBalances
+  } catch (e) {
+    throw e
+  }
+}
 
-// updateAllData(testdata, "token1");
 
-function updateTokens(){
-  for(let token in config)
-    checkWorker(token);
+
+
+function updateTokens() {
+  for (let token in config) {
+    checkStatus(token);
+    checkVBalances(token);
+  }
 }
 setInterval(updateTokens, 120000);
 updateTokens();
@@ -154,7 +140,7 @@ updateTokens();
 
 const server = express();
 server.get('/metrics', (req, res) => {
-    res.set('Content-Type', registry.contentType);
-    res.end(registry.metrics());
+  res.set('Content-Type', registry.contentType);
+  res.end(registry.metrics());
 });
 server.listen(3000);

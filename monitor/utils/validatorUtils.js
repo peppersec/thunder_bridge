@@ -43,44 +43,19 @@ const processValidatorsEvents = events => {
   return Array.from(validatorList)
 }
 
-// Do not working
 
-// const validatorList = async contract => {
-//   try {
-//     return await contract.methods.validatorsList().call()
-//   } catch (e) {
-//     return []
-//   }
-// }
 
 const filterAsync = (array, filter) =>
   Promise.all(array.map(entry => filter(entry)))
-  .then(bits => array.filter(entry => bits.shift()));
+    .then(bits => array.filter(entry => bits.shift()));
 
 const getValidatorList = async (address, eth, fromBlock, toBlock) => {
   const validatorsContract = new eth.Contract(bridgeValidatorsAbi, address)
-  //const validators = await validatorList(validatorsContract)
-  let validators = (await validatorsContract.getPastEvents("ValidatorAdded", {fromBlock:"1", toBlock:"latest"})).map(e=>e.returnValues.validator);
-  
-  validators = await filterAsync(validators, async v=> await validatorsContract.methods.isValidator(v).call());
-  
+  let validators = (await validatorsContract.getPastEvents("ValidatorAdded", { fromBlock: "1", toBlock: "latest" })).map(e => e.returnValues.validator);
+
+  validators = await filterAsync(validators, async v => await validatorsContract.methods.isValidator(v).call());
 
   return validators;
-  // if (validators.length) {
-  //   return validators
-  // }
-
-
-  // const contract = new eth.Contract([], address)
-  // const validatorsEvents = await getPastEvents({
-  //   contract,
-  //   event: 'allEvents',
-  //   fromBlock,
-  //   toBlock,
-  //   options: {}
-  // })
-
-  // return processValidatorsEvents(validatorsEvents)
 }
 
 module.exports = {
