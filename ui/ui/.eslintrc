@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "react-app",
+    "../.eslintrc"
+  ],
+  "rules": {
+    "no-use-before-define": "off"
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "legacyDecorators": true
+    }
+  }
+}
