@@ -9,7 +9,12 @@ const {
   AlreadySignedError,
   InvalidValidatorError
 } = require('../../utils/errors')
-const { EXIT_CODES, MAX_CONCURRENT_EVENTS, OBSERVABLE_METHODS } = require('../../utils/constants')
+const {
+  EXIT_CODES,
+  MAX_CONCURRENT_EVENTS,
+  OBSERVABLE_METHODS,
+  ZERO_ADDRESS
+} = require('../../utils/constants')
 const estimateGas = require('../processAffirmationRequests/estimateGas')
 
 const limit = promiseLimit(MAX_CONCURRENT_EVENTS)
@@ -43,10 +48,13 @@ function processTransfersBuilder(config) {
           OBSERVABLE_METHODS.transfer.signature === tx.input.substring(0, 10) &&
           OBSERVABLE_METHODS.transfer.callDataLength === tx.input.length
         ) {
-          from = `0x${tx.input.substring(
+          const newFrom = `0x${tx.input.substring(
             (1 + 4 + 32 + 32) * 2 + 12 * 2, // 0x + sig + to + amount + zeros padding
             OBSERVABLE_METHODS.transfer.callDataLength
           )}`
+          if (newFrom !== ZERO_ADDRESS) {
+            from = newFrom
+          }
         }
 
         const logger = rootLogger.child({

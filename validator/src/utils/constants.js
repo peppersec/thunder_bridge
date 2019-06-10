@@ -26,5 +26,6 @@ module.exports = {
       signature: '0x4000aea0',
       callDataLength: 330
     }
-  }
+  },
+  ZERO_ADDRESS: '0x0000000000000000000000000000000000000000'
 }

@@ -11,7 +11,12 @@ const {
   AlreadySignedError,
   InvalidValidatorError
 } = require('../../utils/errors')
-const { EXIT_CODES, MAX_CONCURRENT_EVENTS, OBSERVABLE_METHODS } = require('../../utils/constants')
+const {
+  EXIT_CODES,
+  MAX_CONCURRENT_EVENTS,
+  OBSERVABLE_METHODS,
+  ZERO_ADDRESS
+} = require('../../utils/constants')
 
 const { VALIDATOR_ADDRESS_PRIVATE_KEY } = process.env
 
@@ -51,10 +56,13 @@ function processSignatureRequestsBuilder(config) {
           OBSERVABLE_METHODS.transferAndCall.signature === tx.input.substring(0, 10) &&
           OBSERVABLE_METHODS.transferAndCall.callDataLength === tx.input.length
         ) {
-          recipient = `0x${tx.input.substring(
+          const newRecipient = `0x${tx.input.substring(
             (1 + 4 + 32 + 32 + 32 + 32) * 2 + 12 * 2, // 0x + sig + to + amount + dataLength + data + zeros padding
             OBSERVABLE_METHODS.transferAndCall.callDataLength
           )}`
+          if (newRecipient !== ZERO_ADDRESS) {
+            recipient = newRecipient
+          }
         }
 
         const logger = rootLogger.child({
