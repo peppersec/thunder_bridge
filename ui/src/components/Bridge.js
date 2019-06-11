@@ -8,6 +8,7 @@ import { BRIDGE_MODES, ERC_TYPES } from '../stores/utils/bridgeMode'
 import { BridgeAddress } from './index'
 import { BridgeForm } from './index'
 import { BridgeNetwork } from './index'
+import { BridgeChoose } from './index'
 import { ModalContainer } from './ModalContainer'
 import { NetworkDetails } from './NetworkDetails'
 import { TransferAlert } from './TransferAlert'
@@ -357,11 +358,7 @@ export class Bridge extends React.Component {
     return (
       <div className="bridge-container">
         <div className="bridge">
-          <BridgeAddress isHome={true} reverse={reverse} />
           <div className="bridge-transfer">
-            <div className="left-image-wrapper">
-              <div className="left-image" />
-            </div>
             <div className="bridge-transfer-content">
               <div className="bridge-transfer-content-background">
                 <BridgeNetwork
@@ -390,12 +387,9 @@ export class Bridge extends React.Component {
                   side="right"
                 />
               </div>
-            </div>
-            <div className="right-image-wrapper">
-              <div className="right-image" />
+              <BridgeChoose />
             </div>
           </div>
-          <BridgeAddress isHome={false} reverse={reverse} />
           <ModalContainer
             hideModal={() => {
               this.setState({ showModal: false })

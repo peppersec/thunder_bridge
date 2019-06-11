@@ -1,33 +1,33 @@
 $theme-name: 'core';
 
 // base colors
-$primary-color: #5c34a2;
+$primary-color: #fee63b;
 $primary-color-dark: #502d8d;
-$primary-color-darker: #45277a;
-$secondary-color: #60db97;
+$primary-color-darker: #e7d136;
+$secondary-color: #f8752a;
 $secondary-color-dark: #64a231;
 $tertiary-color: #ffaa07;
 $danger-color: #f13662;
 $blue-color: #3ab9fe;
 
 $text-color: #333;
-$link-color: $primary-color;
+$link-color: $secondary-color;
 
 $gradient-color-1: $primary-color;
 $gradient-color-2: #7b5ab2;
 
 // main
-$main-background-color: #fff;
+$main-background-color: #e6e6e6;
 $main-font-family: 'Nunito', sans-serif;
 
 // header
 $header-background-color: $primary-color;
-$header-logo-width: 180px;
-$header-logo-height: 26px;
+$header-logo-width: 233px;
+$header-logo-height: 30px;
 
 // header menu
 $header-menu-icon-color: $secondary-color;
-$header-menu-text-color: #fff;
+$header-menu-text-color: #414141;
 
 // daily quota
 $daily-quota-background: $primary-color-darker;
@@ -35,9 +35,9 @@ $daily-quota-progress: $secondary-color;
 
 // footer
 $footer-background-color: $primary-color;
-$footer-logo-width: 130px;
-$footer-logo-height: 18px;
-$footer-text-color: #fff;
+$footer-logo-width: 131px;
+$footer-logo-height: 17px;
+$footer-text-color: #414141;
 
 // separator
 $separator-color: #e4e4e4;
@@ -46,11 +46,10 @@ $separator-color: #e4e4e4;
 $pattern-background-image: $base-images-path + '/themes/' + $theme-name + '/background/bg-pattern.svg';
 
 // social icons
-$social-icons-background-color: #fff;
-$social-icons-icon-color: $primary-color;
+$social-icons-icon-color: #414141;
 
 // logo
-$logo-image: $base-images-path + '/themes/' + $theme-name + '/logos/logo.svg';
+$logo-image: $base-images-path + '/themes/' + $theme-name + '/logos/logo-thundercore@2x.png';
 
 // home logo
 $home-logo-image: $base-images-path + '/themes/' + $theme-name + '/logos/logo-home.png';
@@ -83,10 +82,10 @@ $button-bordered-border-color: $primary-color;
 
 // modals
 $modal-background-color: #fff;
-$modal-overlay-background-color: rgba($primary-color-dark, 0.8);
-$modal-title-color: $primary-color;
+$modal-overlay-background-color: rgba(#000, 0.8);
+$modal-title-color: $secondary-color;
 $modal-text-color: $text-color;
-$modal-link-color: $primary-color;
+$modal-link-color: $secondary-color;
 
 // mobile menu
 $mobile-menu-background-color: $primary-color-darker;
@@ -98,18 +97,17 @@ $loading-item-text-color: #fff;
 $loading-logo: $base-images-path + '/themes/' + $theme-name + '/logos/logo-loading.svg';
 
 // bridge section
-$bridge-gradient-start: $gradient-color-1;
-$bridge-gradient-end: $gradient-color-2;
+$bridge-background-color: #fff;
 $bridge-logo-background-color: $primary-color;
 $bridge-link-color: $secondary-color;
 $bridge-balance-color: $secondary-color;
 $bridge-button-background-color: $button-background-color;
 $bridge-button-text-color: $button-text-color;
-$bridge-textfield-background: rgba(251, 251, 252, 0.2);
-$bridge-input-label-color: #fff;
-$bridge-label-color: #fff;
-$bridge-textfield-color: #fff;
-$bridge-textfield-placeholder-color: rgba(255, 255, 255, 0.7);
+$bridge-textfield-background: #f3f4f6;
+$bridge-input-label-color: #adb3c0;
+$bridge-label-color: #adb3c0;
+$bridge-textfield-color: #414141;
+$bridge-textfield-placeholder-color: rgba(#414141, .6);
 $bridge-side-image-width: 272px;
 $bridge-side-image-height: 276px;
 $bridge-image-center-pointing-left: $base-images-path + '/themes/' + $theme-name + '/bridge/center-image-pointing-left.svg';
@@ -123,11 +121,11 @@ $bridge-transfer-title-color: $primary-color;
 $alert-logo-box-background-color: $primary-color;
 
 // copy icon
-$copy-icon-color: $primary-color;
+$copy-icon-color: $secondary-color;
 
 // status section
 $status-text-color: $text-color;
-$status-authority-number-color: $primary-color;
+$status-authority-number-color: $secondary-color;
 $status-authority-address-color: $text-color;
 
 $status-authority-logo-0: $base-images-path + '/themes/' + $theme-name + '/status/authority/logo-0.svg';
@@ -135,8 +133,8 @@ $status-authority-logo-1: $base-images-path + '/themes/' + $theme-name + '/statu
 $status-authority-logo-2: $base-images-path + '/themes/' + $theme-name + '/status/authority/logo-2.svg';
 
 // datablock
-$datablock-value-color: $primary-color;
-$datablock-type-color: $primary-color;
+$datablock-value-color: $secondary-color;
+$datablock-type-color: $secondary-color;
 $datablock-text-color: $text-color;
 
 // statistics

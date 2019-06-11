@@ -9,7 +9,7 @@
     width: 100%;
 
     @media screen and (max-width: $tablet-width) {
-        height: 512px;
+        height: auto;
     }
 }
 
@@ -19,86 +19,8 @@
     overflow: hidden;
     width: 100%;
 
-    .bridge-home {
-        align-self: center;
-        background-image: linear-gradient(to right, $bridge-gradient-start, $bridge-gradient-end);
-        display: flex;
-        height: 80px;
-        width: 960px;
-
-        @media screen and (max-width: $tablet-width) {
-            display: none
-        }
-
-        .bridge-home-container {
-            background-color: $main-background-color;
-            min-width: 60px;
-            width: 9%;
-
-            .home-logo-container {
-                align-items: center;
-                background-color: $bridge-logo-background-color;
-                border-radius: 10px;
-                border-bottom-right-radius: 0;
-                display: flex;
-                height: 100%;
-                justify-content: center;
-            }
-        }
-
-        .home-address-container {
-            align-items: center;
-            background-color: $main-background-color;
-            border-bottom-left-radius: 10px;
-            display: flex;
-            width: 92%;
-
-            .icon-wallet {
-                padding: 20px;
-            }
-        }
-    }
-
-    .bridge-foreign {
-        align-self: center;
-        background-image: linear-gradient(to right, $bridge-gradient-start, $bridge-gradient-end);
-        display: flex;
-        height: 80px;
-        width: 960px;
-
-        @media screen and (max-width: $tablet-width) {
-            display: none
-        }
-
-        .bridge-foreign-container {
-            background-color: $main-background-color;
-            min-width: 60px;
-            width: 9%;
-
-            .foreign-logo-container {
-                align-items: center;
-                background-color: $bridge-gradient-end;
-                border-radius: 10px;
-                border-top-left-radius: 0;
-                display: flex;
-                height: 100%;
-                justify-content: center;
-            }
-        }
-
-        .foreign-address-container {
-            align-items: center;
-            background-color: $main-background-color;
-            border-top-right-radius: 10px;
-            display: flex;
-            justify-content: flex-end;
-            text-align: right;
-            width: 92%;
-
-            .icon-wallet {
-                padding: 20px;
-            }
-        }
+    @media screen and (max-width: $tablet-width) {
+        margin-top: 10px;
     }
 
     .address-label {
@@ -116,55 +38,12 @@
         }
     }
     .bridge-transfer {
-        height: 276px;
         display: flex;
         justify-content: center;
 
-        @media screen and (max-width: $tablet-width) {
-            height: 389px;
-        }
-        .left-image-wrapper {
-            background-color: $bridge-gradient-start;
-            .left-image {
-                background-color: $main-background-color;
-                background-image: url('#{ $bridge-image-left }');
-                background-position: calc(100% - 5px) 5px;
-                background-repeat: no-repeat;
-                background-size: contain;
-                border-top-right-radius: 10px;
-                height: $bridge-side-image-height;
-                max-width: 100%;
-                width: $bridge-side-image-width;
-
-                @media screen and (max-width: $tablet-width) {
-                    display: none;
-                }
-            }
-        }
-
-        .right-image-wrapper {
-            background-color: $bridge-gradient-end;
-            .right-image {
-              background-color: $main-background-color;
-              background-image: url('#{ $bridge-image-right }');
-              background-position: 5px 5px;
-              background-repeat: no-repeat;
-              background-size: contain;
-              border-bottom-left-radius: 10px;
-              height: $bridge-side-image-height;
-              max-width: 100%;
-              width: $bridge-side-image-width;
-
-              @media screen and (max-width: $tablet-width) {
-                  display: none;
-              }
-            }
-        }
-
         .bridge-transfer-content {
-            background-image: linear-gradient(to right, $bridge-gradient-start, $bridge-gradient-end);
-            border-bottom-left-radius: 10px;
-            border-top-right-radius: 10px;
+            background-color: $bridge-background-color;
+            border-radius: 10px;
             display: flex;
             flex-shrink: 0;
             flex-wrap: wrap;
@@ -181,6 +60,7 @@
                 flex-shrink: 0;
                 flex-wrap: wrap;
                 width: 880px;
+                align-items: center;
 
                 @media screen and (max-width: $tablet-width) {
                     background-image: url('#{ $bridge-image-center-pointing-down }');
@@ -236,7 +116,7 @@
                 color: $bridge-label-color;
             }
             .network-title {
-                color: $bridge-label-color;
+                color: $bridge-textfield-color;
                 display: block;
                 font-size: 24px;
                 font-weight: 700;
@@ -318,83 +198,87 @@
                 }
             }
             .form-container {
-                height: 276px;
                 max-width: 384px;
                 width: 44%;
                 @media screen and (max-width: $tablet-width) {
                     align-self: center;
-                    height: 97px;
                     width: 100%;
                 }
                 .bridge-form {
                     display: flex;
                     flex-direction: column;
-                    height: 276px;
                     justify-content: space-evenly;
                     @media screen and (max-width: $tablet-width) {
-                        height: auto;
                         width: 100%;
                     }
                     &-controls {
-                        @extend %flex-between;
-                        background-color: $bridge-textfield-background;
                         border-radius: 5px;
-                        padding: 8px 8px 8px 0;
+                        padding: 8px;
 
                         @media screen and (max-width: $tablet-width) {
-                            background-color: unset;
                             flex-direction: column;
-                            padding: 8px 8px 8px 8px;
                         }
                     }
+
+                    &-inputs {
+                        @extend %flex-between;
+
+                        @media screen and (max-width: $tablet-width) {
+                            flex-direction: column;
+                        }
+                    }
+
                     .bridge-form-input-container {
                         display: flex;
                         justify-content: space-between;
                         width: 292px;
+                        background-color: #f3f4f6;
+                        border-radius: 3px 3px 0 0;
+                        margin-bottom: 20px;
+
+                        &:first-child {
+                            margin-right: 10px;
+                        }
+
+                        &:last-child {
+                            margin-left: 10px;
+                        }
 
                         @media screen and (max-width: $tablet-width) {
-                            background-color: rgba(251, 251, 252, 0.2);
-                            border-radius: 3px 3px 0 0;
                             width: 100%;
+
+                            &:first-child {
+                                margin-right: 0;
+                            }
+
+                            &:last-child {
+                                margin-left: 0;
+                            }
                         }
                     }
                     &-input {
+                        font-family: "Nunito",sans-serif;
                         background-color: transparent;
                         color: $bridge-textfield-color;
-                        font-size: 24px;
+                        font-size: 16px;
                         font-weight: 700;
                         height: 48px;
-                        padding-left: 16px;
-                        width: 165px;
+                        padding: 0 15px;
+                        width: 100%;
 
                         &::placeholder {
                             color: $bridge-textfield-placeholder-color;
-                            font-size: 24px;
+                            font-size: 16px;
                             font-weight: 700;
-
-                            @media screen and (max-width: $tablet-width) {
-                                font-size: 18px;
-                            }
-                        }
-
-                        &::placeholder {
-                            opacity: 0.3;
-                        }
-                        @media screen and (max-width: $tablet-width) {
-                            font-size: 18px;
                         }
                     }
                     &-label {
                         color: $bridge-input-label-color;
-                        font-size: 24px;
+                        font-size: 16px;
                         font-weight: 700;
                         line-height: 48px;
-                        margin: 0 10px;
+                        margin-right: 15px;
                         text-transform: uppercase;
-
-                        @media screen and (max-width: $tablet-width) {
-                            font-size: 18px;
-                        }
                     }
                     &-button {
                         background-color: $bridge-button-background-color;
@@ -405,12 +289,7 @@
                         font-weight: 700;
                         height: 48px;
                         text-decoration: none;
-                        width: 92px;
-
-                        @media screen and (max-width: $tablet-width) {
-                            border-radius: 0 0 3px 3px;
-                            width: 100%;
-                        }
+                        width: 100%;
 
                         &:hover {
                             background-color: darken($bridge-button-background-color, 10%);
@@ -422,6 +301,113 @@
                     }
                 }
             }
+        }
+    }
+    .bridge-choose {
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #eef2f9;
+        margin: 0 40px;
+        padding: 40px 0;
+        flex-wrap: wrap;
+
+        @media screen and (max-width: $tablet-width) {
+            flex-direction: column;
+            max-width: 384px;
+            margin: 10px auto 0;
+            padding: 20px 0;
+        }
+
+        &-button {
+            margin: 5px;
+
+            &:hover {
+                .bridge-choose-container {
+                    background-color: #efefef;
+                }
+            }
+        }
+
+        &-radio {
+            position: absolute;
+            z-index: -1;
+            opacity: 0;
+
+            &:checked + .bridge-choose-container {
+                border-color: #f8752a;
+                background-color: #fff;
+
+                &:after {
+                    background-color: #f8752a;
+                    opacity: 1;
+                }
+
+                .bridge-choose-arrow {
+                    background-color: #f8752a;
+                }
+            }
+        }
+
+        &-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            background-color: #f9f9fa;
+            padding: 20px;
+            border: solid 1px transparent;
+            position: relative;
+
+            &:after {
+                content: '';
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                background-color: transparent;
+                background-image: url(#{$base-images-path + '/themes/' + $theme-name + '/bridge/check.svg'});
+                background-position: center;
+                background-repeat: no-repeat;
+                right: -1px;
+                top: -1px;
+                border-radius: 0 4px 0 4px;
+                opacity: 0;
+            }
+        }
+
+        &-logo {
+            width: 24px;
+            height: 24px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            display: inline-block;
+
+            &-container {
+                width: 40px;
+                height: 40px;
+                border: solid 2px #f3f4f6;
+                background-color: #ffffff;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 40px;
+            }
+        }
+
+        &-text {
+            font-size: 12px;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        &-arrow {
+            mask: url(#{$base-images-path + '/themes/' + $theme-name + '/bridge/arrow-dark.svg'}) no-repeat 50% 50%;
+            background-color: #414141;
+            width: 7px;
+            height: 12px;
+            display: inline-block;
+            margin: 0 10px;
         }
     }
     .bridge-statistics-container {
@@ -676,7 +662,7 @@
         margin-left: 4%;
     }
     .noWallet-image-container {
-        background-image: linear-gradient(to right, $gradient-color-2, $gradient-color-1);
+        background-color: $bridge-background-color;
         border-radius: 8px 0 0 8px;
         width: 150px;
         @media screen and (max-width: $tablet-width) {
@@ -890,5 +876,19 @@
                 min-width: 100px;
             }
         }
+    }
+}
+
+.logo {
+    &-dai {
+        background-image: url(#{$base-images-path + '/logos/logo-dai@2x.png'});
+    }
+
+    &-tt-dai, &-tt-usdt {
+        background-image: url(#{$base-images-path + '/logos/logo-tt@2x.png'});
+    }
+
+    &-usdt {
+        background-image: url(#{$base-images-path + '/logos/logo-usdt@2x.png'});
     }
 }

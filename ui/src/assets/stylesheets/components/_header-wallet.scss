@@ -1,9 +1,8 @@
 .header-wallet {
-    background-color: $primary-color-dark;
     display: flex;
     flex-direction: column;
-    height: 70px;
-    justify-content: space-evenly;
+    height: 80px;
+    justify-content: center;
     width: 220px;
 
     @media screen and (max-width: $tablet-width) {
@@ -16,15 +15,19 @@
 
         .wallet-icon {
             margin-right: 10px;
-             path {
-                fill: $header-menu-icon-color;
-            }
+            height: 26px;
+        }
+        .wallet-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .wallet-text {
-            color: #fff;
+            color: #414141;
             font-size: 14px;
             font-weight: bold;
-            line-height: 18px;
+            line-height: 14px;
+            padding-bottom: 6px;
             &:hover {
                 text-decoration: none;
             }
@@ -39,15 +42,13 @@
 
     .daily-quota-container {
         background-color: $daily-quota-background;
-        border-radius: 3px;
-        height: 6px;
-        margin-left: 20px;
-        width: 180px;
+        border-radius: 2px;
+        height: 4px;
 
         .daily-quota-progress {
             background-color: $daily-quota-progress;
-            border-radius: 3px;
-            height: 6px;
+            border-radius: 2px;
+            height: 4px;
         }
     }
 }
