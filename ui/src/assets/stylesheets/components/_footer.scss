@@ -17,6 +17,14 @@
     }
   }
 
+  p {
+    font-size: 12px;
+
+    @media screen and (max-width: $tablet-width) {
+      margin-top: 15px;
+    }
+  }
+
   .social-icons {
     order: 2;
 

@@ -357,11 +357,7 @@ export class Bridge extends React.Component {
     return (
       <div className="bridge-container">
         <div className="bridge">
-          <BridgeAddress isHome={true} reverse={reverse} />
           <div className="bridge-transfer">
-            <div className="left-image-wrapper">
-              <div className="left-image" />
-            </div>
             <div className="bridge-transfer-content">
               <div className="bridge-transfer-content-background">
                 <BridgeNetwork
@@ -391,11 +387,7 @@ export class Bridge extends React.Component {
                 />
               </div>
             </div>
-            <div className="right-image-wrapper">
-              <div className="right-image" />
-            </div>
           </div>
-          <BridgeAddress isHome={false} reverse={reverse} />
           <ModalContainer
             hideModal={() => {
               this.setState({ showModal: false })

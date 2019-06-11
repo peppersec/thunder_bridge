@@ -1,6 +1,5 @@
 .menu-items {
     font-weight: bold;
-    line-height: 16px;
     margin: 0 15px;
     text-decoration: none;
 
@@ -16,11 +15,11 @@
 .menu-items-text {
     color: $header-menu-text-color;
     margin-left: 10px;
+    font-size: 14px;
+    line-height: 26px;
 }
 
 .menu-items-icon {
     float: left;
-    path {
-        fill: $header-menu-icon-color;
-    }
+    height: 26px;
 }

@@ -36,10 +36,12 @@ export class Wallet extends React.Component {
       >
         <div className="wallet-container">
           <span className="wallet-icon">{<WalletIcon />}</span>
-          {wallet}
-        </div>
-        <div className="daily-quota-container">
-          {web3Store.metamaskNet.id && <div className="daily-quota-progress" style={{ width }} />}
+          <div className="wallet-info">
+            {wallet}
+            <div className="daily-quota-container">
+              {web3Store.metamaskNet.id && <div className="daily-quota-progress" style={{ width }} />}
+            </div>
+          </div>
         </div>
       </div>
     )
