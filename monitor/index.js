@@ -1,13 +1,40 @@
+if (process.env.NODE_ENV !== "production")
+  require("dotenv").config();
+
 const express = require('express');
 const client = require('prom-client');
-const deepmerge = require('deepmerge');
+
 
 const Web3 = require('web3')
 const { decodeBridgeMode } = require('./utils/bridgeMode')
 
-const { readFileSync } = require('fs');
+const { readFileSync, existsSync } = require('fs');
+const { env } = process;
 
-const config = JSON.parse(readFileSync("config.json", "utf8"));
+function mkDict(pairs) {
+  const res = {}
+  for (let i in pairs) {
+    const p = pairs[i];
+    res[p[0]] = p[1];
+  }
+  return res;
+}
+
+
+
+let config = existsSync("config.json") ? JSON.parse(readFileSync("config.json", "utf8")) :
+  mkDict(env.TOKEN_LABELS.split(":").map(L => [L, {
+    "HOME_RPC_URL": env.HOME_RPC_URL,
+    "FOREIGN_RPC_URL": env.FOREIGN_RPC_URL,
+    "HOME_BRIDGE_ADDRESS": env[`${L}_HOME_BRIDGE_ADDRESS`],
+    "FOREIGN_BRIDGE_ADDRESS": env[`${L}_FOREIGN_BRIDGE_ADDRESS`],
+    "HOME_DEPLOYMENT_BLOCK": env[`${L}_HOME_DEPLOYMENT_BLOCK`],
+    "FOREIGN_DEPLOYMENT_BLOCK": env[`${L}_FOREIGN_DEPLOYMENT_BLOCK`],
+    "GAS_PRICE_SPEED_TYPE": env.GAS_PRICE_SPEED_TYPE,
+    "GAS_LIMIT": env.GAS_LIMIT,
+    "GAS_PRICE_FALLBACK": env.GAS_PRICE_FALLBACK
+  }]))
+
 
 const registry = new client.Registry();
 
