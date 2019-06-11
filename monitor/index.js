@@ -23,7 +23,7 @@ function mkDict(pairs) {
 
 
 let config = existsSync("config.json") ? JSON.parse(readFileSync("config.json", "utf8")) :
-  mkDict(env.TOKEN_LABELS.split(":").map(L => [L, {
+  mkDict(env.TOKEN_LABELS.split(" ").filter(s => s.length > 2).map(L => [L, {
     "HOME_RPC_URL": env.HOME_RPC_URL,
     "FOREIGN_RPC_URL": env.FOREIGN_RPC_URL,
     "HOME_BRIDGE_ADDRESS": env[`${L}_HOME_BRIDGE_ADDRESS`],
