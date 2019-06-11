@@ -8,6 +8,7 @@ import { BRIDGE_MODES, ERC_TYPES } from '../stores/utils/bridgeMode'
 import { BridgeAddress } from './index'
 import { BridgeForm } from './index'
 import { BridgeNetwork } from './index'
+import { BridgeChoose } from './index'
 import { ModalContainer } from './ModalContainer'
 import { NetworkDetails } from './NetworkDetails'
 import { TransferAlert } from './TransferAlert'
@@ -386,6 +387,7 @@ export class Bridge extends React.Component {
                   side="right"
                 />
               </div>
+              <BridgeChoose />
             </div>
           </div>
           <ModalContainer
