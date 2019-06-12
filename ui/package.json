@@ -31,7 +31,7 @@
     "lint": "eslint . --ignore-path ../.eslintignore",
     "select-css-theme": "node scripts/selectTheme.js",
     "build-css": "node-sass-chokidar src/assets/stylesheets -o src/assets/stylesheets --output-style=compressed -m application*.css",
-    "watch-css": "nodemon -e scss -x \"yarn build-css\"",
+    "watch-css": "nodemon -e scss -x \"yarn build-css && yarn select-css-theme\"",
     "start": "yarn build-css && yarn select-css-theme && react-app-rewired start",
     "build": "yarn build-css && yarn select-css-theme && react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom --no-watch",

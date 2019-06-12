@@ -35,4 +35,8 @@
   @media (max-width: $container-responsive-width) {
     width: 98%;
   }
+
+  @media (min-width: 1200px) {
+    width: 1140px;
+  }
 }
