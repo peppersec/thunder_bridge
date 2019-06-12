@@ -5,7 +5,6 @@
   .statistics-page-container {
     display: flex;
     flex-direction: column;
-    max-width: $container-width;
     width: 880px;
     padding: 10px 40px 40px;
     background-color: #fff;
@@ -19,6 +18,10 @@
     @media screen and (max-width: $tablet-width) {
       padding: 0 15px;
       margin-top: 10px;
+    }
+
+    @media (min-width: 1200px) {
+      width: 1140px;
     }
 
     .statistics-title {

@@ -45,22 +45,23 @@
             background-color: $bridge-background-color;
             border-radius: 10px;
             display: flex;
-            flex-shrink: 0;
-            flex-wrap: wrap;
+            flex-direction: column;
             width: 880px;
 
             @media screen and (max-width: $tablet-width) {
                 border-radius: 8px;
-                flex-direction: column;
                 max-width: 92%;
+            }
+
+            @media (min-width: 1200px) {
+                width: 1140px;
             }
 
             .bridge-transfer-content-background {
                 display: flex;
                 flex-shrink: 0;
                 flex-wrap: wrap;
-                width: 880px;
-                align-items: center;
+                width: 100%;
 
                 @media screen and (max-width: $tablet-width) {
                     background-image: url('#{ $bridge-image-center-pointing-down }');
@@ -68,58 +69,73 @@
                     background-repeat: no-repeat;
                     background-size: 164px 203px;
                     flex-direction: column;
-                    width: auto;
+                }
+            }
+            .network-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                flex-grow: 1;
+
+                @media screen and (max-width: $tablet-width) {
+                    flex-grow: 0;
+                    min-width: 200px;
                 }
             }
 
             .network-container-home {
-                align-items: flex-start;
                 display: flex;
-                flex-direction: column;
-                height: 136px;
-                justify-content: space-evenly;
                 padding: 70px 1% 70px 5%;
                 width: 22%;
 
                 @media screen and (max-width: $tablet-width) {
-                    align-items: center;
-                    align-self: center;
-                    height: 136px;
-                    padding: 5px 0 5px 0;
+                    padding: 25px 0 5px 0;
                     width: auto;
+                    justify-content: center;
                 }
             }
             .network-container-foreign {
-                align-items: flex-end;
                 display: flex;
-                flex-direction: column;
-                height: 136px;
-                justify-content: space-evenly;
                 padding: 70px 5% 70px 1%;
                 width: 22%;
 
                 @media screen and (max-width: $tablet-width) {
-                    align-items: center;
-                    align-self: center;
-                    height: 136px;
-                    padding: 5px 0 5px 0;
+                    padding: 25px 0 5px 0;
                     width: auto;
+                    justify-content: center;
                 }
             }
+
+            .network-logo {
+                &-container {
+                    border: solid 2px #f3f4f6;
+                    border-radius: 100px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100px;
+                    height: 100px;
+                    position: relative;
+                    z-index: 10;
+                    background-color: #fff;
+                }
+            }
+
             .bridge-network-data {
-                align-items: center;
+                align-items: flex-start;
                 cursor: pointer;
                 display: flex;
             }
             .network-basic-label {
-                font-size: 13px;
+                font-size: 14px;
                 color: $bridge-label-color;
             }
             .network-title {
                 color: $bridge-textfield-color;
                 display: block;
-                font-size: 24px;
+                font-size: 16px;
                 font-weight: 700;
+                padding: 20px 0;
             }
             .network-name {
                 color: $bridge-label-color;
@@ -157,8 +173,12 @@
             }
             .network-balance {
                 color: $bridge-balance-color;
-                font-size: 13px;
+                font-size: 20px;
                 font-weight: 700;
+
+                &-currency {
+                    font-size: 14px;
+                }
             }
             .network-show-more {
                 color: $bridge-link-color;
@@ -179,31 +199,78 @@
             .info-icon-right {
                 margin-left: 10px;
             }
-            .transfer-right {
-                background-image: url('#{ $bridge-image-center-pointing-right }');
-                background-position: center;
-                background-repeat: no-repeat;
+
+            .transfer-line {
+                margin-top: 70px;
+                height: 100px;
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
 
                 @media screen and (max-width: $tablet-width) {
-                    background-image: none;
+                    display: none;
+                }
+
+                &:after {
+                    content: '';
+                    position: absolute;
+                    height: 2px;
+                    background-color: #f3f4f6;
+                    top: 50%;
+                    left: -80px;
+                    right: -80px;
+                    margin-top: -1px;
+                    z-index: 1;
+                }
+
+                .arrow {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 40px;
+                    border: solid 2px #f3f4f6;
+                    background-color: #ffffff;
+                    position: relative;
+                    z-index: 10;
+                }
+            }
+
+            .transfer-right {
+                .arrow {
+                    background-image: url('#{ $bridge-image-center-pointing-right }');
+                    background-position: center;
+                    background-repeat: no-repeat;
+
+                    @media screen and (max-width: $tablet-width) {
+                        background-image: none;
+                    }
                 }
             }
             .transfer-left {
-                background-image: url('#{ $bridge-image-center-pointing-left }');
-                background-position: center;
-                background-repeat: no-repeat;
+                .arrow {
+                    background-image: url('#{ $bridge-image-center-pointing-left }');
+                    background-position: center;
+                    background-repeat: no-repeat;
 
-                @media screen and (max-width: $tablet-width) {
-                    background-image: none;
+                    @media screen and (max-width: $tablet-width) {
+                        background-image: none;
+                    }
                 }
             }
             .form-container {
                 max-width: 384px;
+                margin: 0 auto;
                 width: 44%;
+
                 @media screen and (max-width: $tablet-width) {
                     align-self: center;
                     width: 100%;
                 }
+
+                @media (min-width: 1200px) {
+                    max-width: 600px;
+                }
+
                 .bridge-form {
                     display: flex;
                     flex-direction: column;
@@ -325,6 +392,9 @@
                 .bridge-choose-container {
                     background-color: #efefef;
                 }
+                .bridge-choose-logo {
+                    filter: grayscale(0);
+                }
             }
         }
 
@@ -345,6 +415,10 @@
                 .bridge-choose-arrow {
                     background-color: #f8752a;
                 }
+
+                .bridge-choose-logo {
+                    filter: grayscale(0);
+                }
             }
         }
 
@@ -354,7 +428,7 @@
             justify-content: center;
             border-radius: 4px;
             background-color: #f9f9fa;
-            padding: 20px;
+            padding: 18px;
             border: solid 1px transparent;
             position: relative;
 
@@ -381,6 +455,7 @@
             background-repeat: no-repeat;
             background-size: contain;
             display: inline-block;
+            filter: grayscale(1);
 
             &-container {
                 width: 40px;
@@ -420,8 +495,9 @@
     }
     .network-details {
         display: flex;
-        flex-direction: column;
         min-width: 558px;
+        background-color: $modal-background-color;
+        border-radius: 10px;
 
         @media screen and (max-width: $tablet-width) {
             min-width: 100%;
@@ -430,67 +506,36 @@
         .details-logo-container {
             align-items: center;
             background-color: $modal-background-color;
-            border-radius: 10px;
-            border-bottom-right-radius: 0;
             display: flex;
-            height: 80px;
             justify-content: center;
-            width: 85px;
+            width: 100px;
+            height: 100px;
+            border: solid 2px #f3f4f6;
+            border-radius: 100px;
+            margin: 24px 0 0 30px;
 
             @media screen and (max-width: $tablet-width) {
                 display: none;
             }
         }
 
-        .details-logo-container:after {
-            content: "";
-            position: absolute;
-            height: 10px;
-            width: 20px;
-            bottom: 0;
-
-            @media screen and (max-width: $tablet-width) {
-                display: none;
-            }
-        }
-        .details-logo-container:after {
-            border-radius: 0 0 0 10px;
-            box-shadow: -10px 0 0 0 #fff;
-            right: 453px;
-            top: 70px;
-
-            @media screen and (max-width: $tablet-width) {
-                display: none;
-            }
-        }
         .details-body {
-            align-self: flex-end;
-            background-color: $modal-background-color;
-            border-radius: 0 10px 10px 10px;
             display: flex;
             flex-direction: column;
-            height: 254px;
             justify-content: space-between;
-            padding: 38px;
-            width: 440px;
+            padding: 24px 30px;
 
             @media screen and (max-width: $tablet-width) {
-                align-self: center;
-                border-radius: 10px 10px 10px 10px;
-                height: 430px;
                 padding: 20px 15px 20px 15px;
-                width: 85%;
-            }
-            @media screen and (max-width: $tablet-width) and (min-width: 415px) {
-                height: 300px;
-            }
-            @media screen and (max-width: 600px) {
-                height: 250px;
             }
 
             .details-data-container {
                 display: flex;
                 justify-content: space-between;
+
+                + .details-data-container {
+                    padding-top: 10px;
+                }
 
                 @media screen and (max-width: $tablet-width) {
                     flex-direction: column;
@@ -512,25 +557,6 @@
                 .details-copy {
                     cursor: pointer;
                 }
-            }
-        }
-        .details-body:before {
-            content: "";
-            position: absolute;
-            height: 10px;
-            width: 20px;
-            bottom: 0;
-            @media screen and (max-width: $tablet-width) {
-                display: none;
-            }
-        }
-        .details-body:before {
-            left: 22px;
-            top: 80px;
-            border-radius: 0 10px 0 0;
-            box-shadow: 10px 0 0 0 #fff;
-            @media screen and (max-width: $tablet-width) {
-                display: none;
             }
         }
     }
@@ -563,10 +589,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            padding-bottom: 40px;
-            padding-right: 60px;
-            padding-top: 40px;
-            width: 374px;
+            padding: 40px 60px;
 
             @media screen and (max-width: $tablet-width) {
                 padding-left: 5px;
@@ -585,7 +608,7 @@
                 justify-content: space-between;
 
                 path {
-                    fill: $primary-color;
+                    fill: $secondary-color;
                 }
 
                 .alert-logo-box {
@@ -662,7 +685,7 @@
         margin-left: 4%;
     }
     .noWallet-image-container {
-        background-color: $bridge-background-color;
+        background-color: $primary-color;
         border-radius: 8px 0 0 8px;
         width: 150px;
         @media screen and (max-width: $tablet-width) {
@@ -721,39 +744,39 @@
         }
 
         .noWallet-metamask {
-            background-color: $button-background-color-2;
+            background-color: $button-background-color;
             border-radius: 3px;
-            color: $button-text-color-2;
+            color: $button-text-color;
             line-height: 36px;
             text-align: center;
             text-decoration: none;
 
             &:hover {
-                background-color: darken($button-background-color-2, 10%);
+                background-color: darken($button-background-color, 10%);
             }
         }
         .noWallet-niftyWallet {
-            background-color: $button-background-color-4;
+            background-color: $button-background-color;
             border-radius: 3px;
-            color: $button-text-color-4;
+            color: $button-text-color;
             line-height: 36px;
             text-align: center;
             text-decoration: none;
 
             &:hover {
-                background-color: darken($button-background-color-4, 10%);
+                background-color: darken($button-background-color, 10%);
             }
         }
         .noWallet-alphawallet {
-            background-color: $button-background-color-3;
+            background-color: $button-background-color;
             border-radius: 3px;
-            color: $button-text-color-3;
+            color: $button-text-color;
             line-height: 36px;
             text-align: center;
             text-decoration: none;
 
             &:hover {
-                background-color: darken($button-background-color-3, 10%);
+                background-color: darken($button-background-color, 10%);
             }
         }
         .noWallet-cancel {
@@ -784,28 +807,11 @@
         width: 92%;
     }
 
-    .image-container {
-        width: 164px;
-
-        @media screen and (max-width: $tablet-width) {
-            display: none;
-        }
-
-        .disclaimer-icon {
-            height: 173px;
-            margin-left: 25px;
-            margin-top: 44px;
-            width: 117px;
-        }
-    }
     .alert-container {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        padding-bottom: 40px;
-        padding-right: 46px;
-        padding-top: 40px;
-        width: 389px;
+        padding: 40px 46px;
 
         @media screen and (max-width: $tablet-width) {
             align-self: center;
@@ -881,14 +887,18 @@
 
 .logo {
     &-dai {
-        background-image: url(#{$base-images-path + '/logos/logo-dai@2x.png'});
+        background-image: url(#{$base-images-path + '/logos/logo-dai.svg'});
     }
 
-    &-tt-dai, &-tt-usdt {
-        background-image: url(#{$base-images-path + '/logos/logo-tt@2x.png'});
+    &-tt-dai {
+        background-image: url(#{$base-images-path + '/logos/tt-dai.svg'});
+    }
+
+    &-tt-usdt {
+        background-image: url(#{$base-images-path + '/logos/tt-usdt.svg'});
     }
 
     &-usdt {
-        background-image: url(#{$base-images-path + '/logos/logo-usdt@2x.png'});
+        background-image: url(#{$base-images-path + '/logos/logo-tether.svg'});
     }
 }

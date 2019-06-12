@@ -3,9 +3,6 @@ import disclaimerIcon from '../assets/images/disclaimer-modal/disclaimer@2x.png'
 
 export const Disclaimer = ({ onConfirmation }) => (
   <div className="disclaimer-alert">
-    <div className="image-container">
-      <img className="disclaimer-icon" src={disclaimerIcon} alt="disclaimer icon" />
-    </div>
     <div className="alert-container">
       <span className="disclaimer-title">
         Welcome to the

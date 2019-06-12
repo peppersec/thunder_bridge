@@ -20,9 +20,6 @@ export const TransferAlert = ({
 
   return (
     <div className="transfer-alert">
-      <div className="image-container">
-        <img className="arrows-icon" src={arrowsIcon} alt="transfer icon" />
-      </div>
       <div className="alert-container">
         <div className="transfer-title">
           <div className="alert-logo-box">

@@ -14,7 +14,7 @@ export class ProgressRing extends Component {
     return (
       <svg height={radius * 2} width={radius * 2}>
         <circle
-          stroke="#7b5ab2"
+          stroke="#292929"
           fill="transparent"
           strokeWidth={stroke}
           strokeDasharray={circumference + ' ' + circumference}
@@ -24,7 +24,7 @@ export class ProgressRing extends Component {
           cy={radius}
         />
         <circle
-          stroke="#60dc97"
+          stroke="#f8752a"
           fill="transparent"
           strokeWidth={stroke}
           strokeDasharray={circumference + ' ' + circumference}

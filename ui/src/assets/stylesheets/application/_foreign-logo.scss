@@ -6,10 +6,6 @@
     height: $foreign-logo-height;
     width: $foreign-logo-width;
 
-    &.foreign-logo-modal {
-        background-image: url('#{ $foreign-logo-image-modal }');
-    }
-
     .alert-logo-box & {
         max-height: 75%;
         max-width: 75%;
