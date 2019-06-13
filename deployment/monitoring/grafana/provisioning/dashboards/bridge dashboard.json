@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 2,
-  "iteration": 1560382100573,
+  "iteration": 1560386225449,
   "links": [],
   "panels": [
     {
@@ -60,7 +60,7 @@
       },
       "pluginVersion": "6.2.1",
       "repeat": "network",
-      "repeatDirection": "h",
+      "repeatDirection": "v",
       "scopedVars": {
         "network": {
           "selected": false,
@@ -84,12 +84,99 @@
       "type": "gauge"
     },
     {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "fill": 1,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 17,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {},
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "repeat": null,
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "bridge_balanceDiff",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "{{token}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Balance diff",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
       "description": "",
       "gridPos": {
         "h": 5,
         "w": 12,
-        "x": 12,
-        "y": 0
+        "x": 0,
+        "y": 5
       },
       "id": 18,
       "links": [],
@@ -124,8 +211,8 @@
       },
       "pluginVersion": "6.2.1",
       "repeat": null,
-      "repeatDirection": "h",
-      "repeatIteration": 1560382100573,
+      "repeatDirection": "v",
+      "repeatIteration": 1560386225449,
       "repeatPanelId": 2,
       "scopedVars": {
         "network": {
@@ -156,10 +243,10 @@
       "dashes": false,
       "fill": 1,
       "gridPos": {
-        "h": 8,
+        "h": 6,
         "w": 12,
-        "x": 0,
-        "y": 5
+        "x": 12,
+        "y": 8
       },
       "id": 9,
       "legend": {
@@ -247,10 +334,104 @@
       "dashes": false,
       "fill": 1,
       "gridPos": {
-        "h": 8,
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 5,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {},
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "repeat": "network",
+      "repeatDirection": "v",
+      "scopedVars": {
+        "network": {
+          "selected": false,
+          "text": "foreign",
+          "value": "foreign"
+        }
+      },
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "bridge_balance{token=\"Z\", network=\"$network\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "{{validator}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Validator balance in $network network",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "fill": 1,
+      "gridPos": {
+        "h": 6,
         "w": 12,
         "x": 12,
-        "y": 5
+        "y": 14
       },
       "id": 10,
       "legend": {
@@ -335,101 +516,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 13
-      },
-      "id": 5,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {},
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "repeat": "network",
-      "repeatDirection": "h",
-      "scopedVars": {
-        "network": {
-          "selected": false,
-          "text": "foreign",
-          "value": "foreign"
-        }
-      },
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "bridge_balance{token=\"Z\", network=\"$network\"}",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{validator}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Validator balance in $network network",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "fill": 1,
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 12,
-        "y": 13
+        "y": 17
       },
       "id": 19,
       "legend": {
@@ -451,8 +538,8 @@
       "points": false,
       "renderer": "flot",
       "repeat": null,
-      "repeatDirection": "h",
-      "repeatIteration": 1560382100573,
+      "repeatDirection": "v",
+      "repeatIteration": 1560386225449,
       "repeatPanelId": 5,
       "scopedVars": {
         "network": {
@@ -533,10 +620,10 @@
         "thresholdMarkers": true
       },
       "gridPos": {
-        "h": 4,
+        "h": 3,
         "w": 12,
         "x": 0,
-        "y": 20
+        "y": 24
       },
       "id": 12,
       "interval": null,
@@ -553,6 +640,7 @@
         }
       ],
       "maxDataPoints": 100,
+      "maxPerRow": 4,
       "nullPointMode": "connected",
       "nullText": null,
       "options": {},
@@ -568,7 +656,7 @@
         }
       ],
       "repeat": "token",
-      "repeatDirection": "h",
+      "repeatDirection": "v",
       "scopedVars": {
         "token": {
           "selected": false,
@@ -605,7 +693,7 @@
           "value": "null"
         }
       ],
-      "valueName": "avg"
+      "valueName": "current"
     },
     {
       "cacheTimeout": null,
@@ -625,10 +713,10 @@
         "thresholdMarkers": true
       },
       "gridPos": {
-        "h": 4,
+        "h": 3,
         "w": 12,
-        "x": 12,
-        "y": 20
+        "x": 0,
+        "y": 27
       },
       "id": 20,
       "interval": null,
@@ -645,6 +733,7 @@
         }
       ],
       "maxDataPoints": 100,
+      "maxPerRow": 4,
       "nullPointMode": "connected",
       "nullText": null,
       "options": {},
@@ -660,8 +749,8 @@
         }
       ],
       "repeat": null,
-      "repeatDirection": "h",
-      "repeatIteration": 1560382100573,
+      "repeatDirection": "v",
+      "repeatIteration": 1560386225449,
       "repeatPanelId": 12,
       "scopedVars": {
         "token": {
@@ -699,94 +788,7 @@
           "value": "null"
         }
       ],
-      "valueName": "avg"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "fill": 1,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 24
-      },
-      "id": 17,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {},
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "repeat": null,
-      "repeatDirection": "h",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "bridge_balanceDiff",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{token}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Balance diff",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "valueName": "current"
     }
   ],
   "refresh": "5s",
@@ -798,7 +800,6 @@
       {
         "allValue": null,
         "current": {
-          "tags": [],
           "text": "All",
           "value": [
             "$__all"
@@ -826,7 +827,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -845,8 +845,18 @@
           },
           {
             "selected": false,
-            "text": "0x553963b10b2a65d221d2648dfdfb76b2fc222bf4",
-            "value": "0x553963b10b2a65d221d2648dfdfb76b2fc222bf4"
+            "text": "0x237086398f30E99316C781dD2Ef1E7C612d9e679",
+            "value": "0x237086398f30E99316C781dD2Ef1E7C612d9e679"
+          },
+          {
+            "selected": false,
+            "text": "0x69Ac0688f8D5dbAa519AbFFDE6CFF500341741Df",
+            "value": "0x69Ac0688f8D5dbAa519AbFFDE6CFF500341741Df"
+          },
+          {
+            "selected": false,
+            "text": "0xBC179527eeA427DbCC04dDbbed2259fA534D2D9B",
+            "value": "0xBC179527eeA427DbCC04dDbbed2259fA534D2D9B"
           }
         ],
         "query": "bridge_balance",
@@ -936,5 +946,5 @@
   "timezone": "",
   "title": "Bridge1",
   "uid": "9MkQFjMZv",
-  "version": 4
+  "version": 19
 }
