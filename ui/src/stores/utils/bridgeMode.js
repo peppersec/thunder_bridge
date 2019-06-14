@@ -1,5 +1,7 @@
-import { abi as HOME_ERC_TO_ERC_ABI } from '../../../../contracts/build/contracts/HomeBridgeErcToErc.json'
-import { abi as FOREIGN_ERC_TO_ERC_ABI } from '../../../../contracts/build/contracts/ForeignBridgeErcToErc.json'
+import HOME_ERC_TO_ERC_ABI from '../../../abis/HomeBridgeErcToErc.abi'
+import FOREIGN_ERC_TO_ERC_ABI from '../../../abis/ForeignBridgeErcToErc.abi'
+
+
 export const BRIDGE_MODES = {
   NATIVE_TO_ERC: 'NATIVE_TO_ERC',
   ERC_TO_ERC: 'ERC_TO_ERC',

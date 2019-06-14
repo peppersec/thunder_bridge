@@ -1,7 +1,7 @@
 import BN from 'bignumber.js'
 import { fromDecimals } from './decimals'
 import { fromWei } from 'web3-utils'
-import { abi as rewardableValidatorsAbi } from '../../../../contracts/build/contracts/BridgeValidators.json'
+import rewardableValidatorsAbi from '../../../abis/BridgeValidators.abi'
 import { ERC_TYPES } from './bridgeMode'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
