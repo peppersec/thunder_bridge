@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx'
-import { abi as BRIDGE_VALIDATORS_ABI } from '../../../contracts/build/contracts/BridgeValidators.json'
-import { abi as ERC677_ABI } from '../../../contracts/build/contracts/ERC677BridgeToken.json'
+import BRIDGE_VALIDATORS_ABI from '../../abis/BridgeValidators.abi'
+import ERC677_ABI from '../../abis/ERC677BridgeToken.abi'
 import { getBlockNumber, getBalance } from './utils/web3'
 import { fromDecimals } from './utils/decimals'
 import {
