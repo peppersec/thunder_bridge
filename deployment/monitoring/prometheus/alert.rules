@@ -1,22 +1,42 @@
 groups:
-- name: example
+- name: bridge
   rules:
 
-  # Alert for any instance that is unreachable for >2 minutes.
-  - alert: service_down
-    expr: up == 0
-    for: 2m
-    labels:
-      severity: page
-    annotations:
-      summary: "Instance {{ $labels.instance }} down"
-      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 2 minutes."
+    - alert: low_funds
+      expr: bridge_leftTx < 10000
+      labels:
+        severity: page
+      annotations:
+        summary: "Low funds on {{ $labels.validator }} validator in {{ $labels.network }} network"
 
-  - alert: high_load
-    expr: node_load1 > 0.5
-    for: 2m
-    labels:
-      severity: page
-    annotations:
-      summary: "Instance {{ $labels.instance }} under high load"
-      description: "{{ $labels.instance }} of job {{ $labels.job }} is under high load."
+    - alert: data_missing
+      expr: >-
+        absent(bridge_deposits{network="home", token="Fau"}) or
+        absent(bridge_deposits{network="foreign", token="Fau"}) or
+        absent(bridge_deposits{network="home", token="Z"}) or
+        absent(bridge_deposits{network="foreign", token="Z"})
+      for: 10m
+      labels:
+        severity: page
+      annotations:
+        summary: "Missing data for 10 min."
+
+    - alert: balance_diff
+      expr: bridge_balanceDiff > 0
+      for: 15m
+      labels:
+        severity: page
+      annotations:
+        summary: "Balance difference detected for token {{ $labels.token }}"
+
+    - alert: tx_diff
+      expr: >-
+        bridge_deposits{network="home"} - ignoring(network) bridge_withdrawals{network="foreign"} != 0 or
+        bridge_deposits{network="foreign"} - ignoring(network) bridge_withdrawals{network="home"} != 0
+      for: 15m
+      labels:
+        severity: page
+      annotations:
+        summary: "Transaction count difference detected for token {{ $labels.token }}"
+
+#    - alert: daily_limit
