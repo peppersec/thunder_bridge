@@ -17,7 +17,6 @@ services:
       - '--web.console.libraries=/usr/share/prometheus/console_libraries'
       - '--web.console.templates=/usr/share/prometheus/consoles'
     depends_on:
-      # - cadvisor
       - alertmanager
 
   grafana:
@@ -27,8 +26,6 @@ services:
     environment:
       VIRTUAL_HOST: $MONITORING_HOSTNAME
       LETSENCRYPT_HOST: $MONITORING_HOSTNAME
-    ports:
-      - 127.0.0.1:9095:3000
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning/:/etc/grafana/provisioning/
@@ -53,28 +50,6 @@ services:
     env_file: ./.env
     volumes:
       - ./config.json:/app/config.json
-
-  # cadvisor:
-  #   image: google/cadvisor
-  #   restart: always
-  #   volumes:
-  #     - /:/rootfs:ro
-  #     - /var/run:/var/run:rw
-  #     - /sys:/sys:ro
-  #     - /var/lib/docker/:/var/lib/docker:ro
-
-  # node-exporter:
-  #   image: prom/node-exporter
-  #   restart: always
-  #   volumes:
-  #     - /proc:/host/proc:ro
-  #     - /sys:/host/sys:ro
-  #     - /:/rootfs:ro
-  #   command: 
-  #     - '--path.procfs=/host/proc' 
-  #     - '--path.sysfs=/host/sys'
-  #     - --collector.filesystem.ignored-mount-points
-  #     - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
 
 networks:
   default:
