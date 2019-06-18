@@ -39,11 +39,15 @@ docker-compose up -d
 cd ui
 cp .env.example .env
 vi .env
+cp config.json.example config.json
+vi config.json
 docker-compose up -d
 ```
 
 ## Monitoring
-- Open `frontend` dir
+- ssh to a host
+- git clone repo
+- cd to `frontend` dir
 - Deploy the webserver
 ```
 cd frontend
@@ -57,4 +61,5 @@ cd monitoring
 cp .env.example .env
 vi .env
 docker-compose up -d
+open MONITORING_HOSTNAME in the browser
 ```
