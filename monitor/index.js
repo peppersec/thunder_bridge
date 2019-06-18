@@ -32,7 +32,8 @@ let config = existsSync("config.json") ? JSON.parse(readFileSync("config.json", 
     "FOREIGN_DEPLOYMENT_BLOCK": env[`${L}_FOREIGN_DEPLOYMENT_BLOCK`],
     "GAS_PRICE_SPEED_TYPE": env.GAS_PRICE_SPEED_TYPE,
     "GAS_LIMIT": env.GAS_LIMIT,
-    "GAS_PRICE_FALLBACK": env.GAS_PRICE_FALLBACK
+    "GAS_PRICE_FALLBACK": env.GAS_PRICE_FALLBACK,
+    "UPDATE_PERIOD": parseInt(env.UPDATE_PERIOD)
   }]))
 
 
@@ -154,15 +155,13 @@ async function checkVBalances(token) {
 
 
 
-
-function updateTokens() {
-  for (let token in config) {
-    checkStatus(token);
-    checkVBalances(token);
-  }
+for(let token in config) {
+  const updater = ((token)=>()=>{checkStatus(token); checkVBalances(token)})(token);
+  setInterval(updater, config[token].UPDATE_PERIOD);
+  updater();
 }
-setInterval(updateTokens, 120000);
-updateTokens();
+
+
 
 
 const server = express();

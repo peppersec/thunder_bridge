@@ -9,7 +9,8 @@
     "GAS_PRICE_SPEED_TYPE":"standard",
     "GAS_LIMIT":300000,
     "GAS_PRICE_FALLBACK":21,
-    "LEFT_TX_THRESHOLD":100
+    "LEFT_TX_THRESHOLD":100,
+    "UPDATE_PERIOD":120000
   },
   "TOKEN2" : {
     "HOME_RPC_URL":"https://rinkeby.infura.io/v3/a3f4d001c1fc4a359ea70dd27fd9cb51",
@@ -21,6 +22,7 @@
     "GAS_PRICE_SPEED_TYPE":"standard",
     "GAS_LIMIT":300000,
     "GAS_PRICE_FALLBACK":21,
-    "LEFT_TX_THRESHOLD":100
+    "LEFT_TX_THRESHOLD":100,
+    "UPDATE_PERIOD":120000
   }
 }

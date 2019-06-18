@@ -27,6 +27,7 @@ Visit http://localhost:3000/metrics
 | `GAS_PRICE_SPEED_TYPE` | Assuming the gas price oracle responds with the following JSON structure: `{"fast": 20.0, "block_time": 12.834, "health": true, "standard": 6.0, "block_number": 6470469, "instant": 71.0, "slow": 1.889}`, this parameter specifies the desirable transaction speed. | `instant` / `fast` / `standard` / `slow` |
 | `GAS_PRICE_FALLBACK` | The gas price (in Wei) that is used if both the oracle and the fall back gas price specified in the Foreign Bridge contract are not available. | integer |
 | `GAS_LIMIT` | The gas limit, using to estimate cost of transactions. | integer |
+| `UPDATE_PERIOD` | The time to update the scan, milliseconds. | integer |
 | `${LABEL}_HOME_BRIDGE_ADDRESS` | The address of the bridge contract address in the Home network. It is used to listen to events from and send validators' transactions to the Home network. | hexidecimal beginning with "0x" |
 | `${LABEL}_FOREIGN_BRIDGE_ADDRESS` | The  address of the bridge contract address in the Foreign network. It is used to listen to events from and send validators' transactions to the Foreign network. | hexidecimal beginning with "0x" |
 | `${LABEL}_HOME_DEPLOYMENT_BLOCK` | The block number in the Home network used to start watching for events when the bridge instance is run for the first time. Usually this is the same block where the Home Bridge contract is deployed. | integer |
