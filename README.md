@@ -1,10 +1,4 @@
 
-# TokenBridge
-
-The TokenBridge is deployed on specified validator nodes (only nodes whose private keys correspond to addresses specified in the smart contracts) in the network. It connects to two chains via a Remote Procedure Call (RPC) and is responsible for:
-- listening to events related to bridge contracts
-- sending transactions to authorize asset transfers
-
 ## General Bridge Overview
 
 The Bridge allows users to transfer assets between two chains in the Ethereum ecosystem. This is a customized version of [POA network Bridge](https://github.com/poanetwork/tokenbridge).
@@ -13,7 +7,7 @@ The Bridge allows users to transfer assets between two chains in the Ethereum ec
 1. The TokenBridge contained in this repository.
 2. [Solidity smart contracts](./contracts). Used to manage bridge validators, collect signatures, and confirm asset relay and disposal.
 3. [Bridge UI Application](./ui). A DApp interface to transfer tokens and coins between chains.
-4. [Bridge Monitor](monitor.old). A tool for checking balances and unprocessed events in bridged networks.
+4. [Bridge Monitor](./monitor). A tool for checking balances and unprocessed events in bridged networks.
 5. [Bridge Deployment](./deployment). Manages configuration instructions for deployment.
 
 ## Network Definitions
@@ -29,6 +23,22 @@ The Bridge allows users to transfer assets between two chains in the Ethereum ec
 The TokenBridge provides next operational mode:
 
 - [x] `ERC20-to-ERC20` ERC20-compatible tokens on the Foreign network are locked and minted as ERC20-compatible tokens (ERC677 tokens) on the Home network. When transferred from Home to Foreign, they are burnt on the Home side and unlocked in the Foreign network. This can be considered a form of atomic swap when a user swaps the token "X" in network "A" to the token "Y" in network "B".
+
+# How to Use
+
+## Installation and Deployment
+
+### Deploy the Bridge Contracts
+
+Go to [deployment](./deployment) folder and follow instructions in **Contracts** section.
+
+### Run Validator software 
+
+Go to [deployment](./deployment) folder and follow instructions in **Validator** section.
+
+### Run Bridge UI
+
+Go to [deployment](./deployment) folder and follow instructions in **User interface** section.
 
 ## Architecture
 
@@ -60,22 +70,6 @@ There are two Senders:
 ### Redis DB
 
 Redis is used to store the number of blocks that were already inspected by watchers, and the Nonce (Number of Operation) which was used previously by the sender to send a transaction.
-
-# How to Use
-
-## Installation and Deployment
-
-#### Deploy the Bridge Contracts
-
-Go to [deployment](./deployment) folder and follow instructions in **Contracts** section.
-
-### Run Validator software 
-
-Go to [deployment](./deployment) folder and follow instructions in **Validator** section.
-
-### Run Bridge UI
-
-Go to [deployment](./deployment) folder and follow instructions in **User interface** section.
 
 ## License
 
