@@ -1,65 +1,53 @@
 # Deploying
 
 ## Contracts
-This needs to be done only once
 
-- Open `contracts` dir
-- Customize `.env` file as needed
+- Open the [contracts](./contracts) folder
+- `cp .env.example .env`
+- Customize `.env` file as needed (you can see detailed description in [contracts/README.md](contracts/README.md))
 - To deploy contracts run
 ```
-cp .env.example .env
-vi .env
 docker-compose run contracts deploy
 ```
 - Note new contract addresses in console and in addresses.json file, you will
   need to put deployed addresses into your `.env` files in other modules
 
 ## Validator
-- Open `bridge` dir
+- Open the [validator](./validator) folder
 - Customize `.env` file as needed
-- Launch the bridge
+- Launch the Bridge
 ```
-cd bridge
-cp .env.example .env
-vi .env
 docker-compose up -d
 ```
 
 ## User interface
-- Open `frontend` dir
-- Deploy the webserver
+- Open the [frontend](./frontend) folder
+- Deploy the webserver:
 ```
-cd frontend
 docker-compose up -d
 ``` 
-- Go to `ui` dir
-- Customize `.env` file as needed
+- Go to [ui](./ui) folder
+- `cp config.json.example config.json`
+- `cp .env.example .env`
+- Customize `.env` and `config.json` files as needed
 - Deploy the ui backend
 ```
-cd ui
-cp .env.example .env
-vi .env
-cp config.json.example config.json
-vi config.json
 docker-compose up -d
 ```
 
 ## Monitoring
-- ssh to a host
-- git clone repo
-- cd to `frontend` dir
+- ssh to a monitoting host
+- git clone the repo
+- cd to [frontend](./frontend) folder
 - Deploy the webserver
 ```
-cd frontend
 docker-compose up -d
 ``` 
-- Open `monitoring` dir
+- Open [monitoring](./monitoring) folder
 - Customize `.env` file as needed
 - Deploy the monitoring backend
 ```
-cd monitoring
-cp .env.example .env
-vi .env
 docker-compose up -d
-open MONITORING_HOSTNAME in the browser
 ```
+
+Now you can open `MONITORING_HOSTNAME` in the browser
