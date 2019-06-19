@@ -1,5 +1,5 @@
 # Bridge Smart Contracts
-These contracts provide the core functionality for the POA bridge. They implement the logic to relay assests between two EVM-based blockchain networks. The contracts collect bridge validator's signatures to approve and facilitate relay operations.
+These contracts provide the core functionality for the Bridge. They implement the logic to relay assests between two EVM-based blockchain networks. The contracts collect bridge validator's signatures to approve and facilitate relay operations.
 
 ## Bridge Overview
 
@@ -43,7 +43,7 @@ Responsibilities and roles of the bridge:
   - sends assets to Bridge contracts:
     - in `ERC-TO-ERC` mode: transfer ERC20 tokens to the Foreign Bridge to mint ERC20 tokens on the Home Network, transfer ERC20 tokens to the Home Bridge to unlock ERC20 tokens on Foreign networks;
 
-## Usage
+## Deploy
 
 Go to [deployment](./deployment) folder and follow instructions in **Contracts** section.
 
