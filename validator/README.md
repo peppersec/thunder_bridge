@@ -95,15 +95,14 @@ npm run test
 
 | Variable | Description |
 |-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `HOME_RPC_URL` | The HTTPS URL(s) used to communicate to the RPC nodes in the Home network. |
-| `FOREIGN_RPC_URL` | The HTTPS URL(s) used to communicate to the RPC nodes in the Foreign network. |
 | `USER_ADDRESS` | An account - the current owner of coins/tokens. |
 | `USER_ADDRESS_PRIVATE_KEY` | A private key belonging to the account. |
-| `HOME_BRIDGE_ADDRESS` | Address of the bridge in the Home network to send transactions. |
-| `HOME_MIN_AMOUNT_PER_TX` | Value (in _eth_ or tokens) to be sent in one transaction for the Home network. This should be greater than or equal to the value specified in the `poa-bridge-contracts/deploy/.env` file. The default value in that file is 500000000000000000, which is equivalent to 0.5. |
+| `HOME_MIN_AMOUNT_PER_TX` | Value (in _eth_ or tokens) to be sent in one transaction for the Home network. This should be greater than or equal to the value in the contract. The default value in that file is 500000000000000000, which is equivalent to 0.5. |
+| `FOREIGN_CUSTOM_RECIPIENT` | New recipient on the Foreign side during Home to Foreign transfer. Usually recepient is the same as sender. |
 | `HOME_TEST_TX_GAS_PRICE` | The gas price (in Wei) that is used to send transactions in the Home network . |
 | `FOREIGN_BRIDGE_ADDRESS` | Address of the bridge in the Foreign network to send transactions. |
 | `FOREIGN_MIN_AMOUNT_PER_TX` | Value (in _eth_ or tokens) to be sent in one transaction for the Foreign network. This should be greater than or equal to the value specified in the `poa-bridge-contracts/deploy/.env` file. The default value in that file is 500000000000000000, which is equivalent to 0.5. |
+| `HOME_CUSTOM_RECIPIENT` | New recipient on the Home side during Foreign to Home transfer. Usually recepient is the same as sender. |
 | `FOREIGN_TEST_TX_GAS_PRICE` | The gas price (in Wei) that is used to send transactions in the Foreign network . |
 
 
