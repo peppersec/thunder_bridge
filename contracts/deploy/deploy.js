@@ -4,8 +4,6 @@ const env = require('./src/loadEnv')
 
 const { BRIDGE_MODE, ERC20_TOKEN_ADDRESS } = env
 
-const deployResultsPath = path.join(__dirname, './bridgeDeploymentResults.json')
-
 async function deployErcToErc() {
   const deployHome = require('./src/erc_to_erc/home')
   const deployForeign = require('./src/erc_to_erc/foreign')
@@ -23,8 +21,10 @@ async function deployErcToErc() {
     }`
   )
   console.log(`[ Foreign ] ERC20 Token: ${ERC20_TOKEN_ADDRESS}`)
+  if (!fs.existsSync('data'))
+    fs.mkdirSync('data', {recursive: true})
   fs.writeFileSync(
-    deployResultsPath,
+    'data/deployed.json',
     JSON.stringify(
       {
         homeBridge: {
@@ -39,7 +39,7 @@ async function deployErcToErc() {
       4
     )
   )
-  console.log('Contracts Deployment have been saved to `bridgeDeploymentResults.json`')
+  console.log('Contracts Deployment have been saved to `data/deployed.json`')
 }
 
 async function main() {
