@@ -11,8 +11,8 @@ groups:
 
     - alert: data_missing
       expr: >-
-        absent(bridge_deposits{network="home", token="Fau"}) or
-        absent(bridge_deposits{network="foreign", token="Fau"}) or
+        absent(bridge_deposits{network="home", token="FAU"}) or
+        absent(bridge_deposits{network="foreign", token="FAU"}) or
         absent(bridge_deposits{network="home", token="Z"}) or
         absent(bridge_deposits{network="foreign", token="Z"})
       for: 10m

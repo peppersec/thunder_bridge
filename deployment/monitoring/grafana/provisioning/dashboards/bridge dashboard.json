@@ -70,7 +70,7 @@
       },
       "targets": [
         {
-          "expr": "bridge_leftTx{token=\"Z\", network=\"$network\"}",
+          "expr": "bridge_leftTx{token=\"FAU\", network=\"$network\"}",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -223,7 +223,7 @@
       },
       "targets": [
         {
-          "expr": "bridge_leftTx{token=\"Z\", network=\"$network\"}",
+          "expr": "bridge_leftTx{token=\"FAU\", network=\"$network\"}",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -373,7 +373,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "bridge_balance{token=\"Z\", network=\"$network\"}",
+          "expr": "bridge_balance{token=\"FAU\", network=\"$network\"}",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{validator}}",
@@ -554,7 +554,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "bridge_balance{token=\"Z\", network=\"$network\"}",
+          "expr": "bridge_balance{token=\"FAU\", network=\"$network\"}",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{validator}}",
@@ -660,8 +660,8 @@
       "scopedVars": {
         "token": {
           "selected": false,
-          "text": "Fau",
-          "value": "Fau"
+          "text": "FAU",
+          "value": "FAU"
         }
       },
       "sparkline": {

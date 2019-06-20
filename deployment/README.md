@@ -1,4 +1,5 @@
 # Deploying
+For all Bridge parts you have to have [Docker](https://www.docker.com/) installed on the host. 
 
 ## Contracts
 
@@ -17,7 +18,7 @@ docker-compose run contracts deploy
 - Customize `.env` file as needed
 - Launch the Bridge
 ```
-docker-compose up -d
+docker-compose -p TOKEN_NAME up -d
 ```
 
 ## User interface
@@ -51,3 +52,9 @@ docker-compose up -d
 ```
 
 Now you can open `MONITORING_HOSTNAME` in the browser
+
+### Docker-machine
+1. `docker-machine scp -r alertmanager <DOCKER_MACHINE_NAME>:<PATH_TO_FOLDER_ON_MACHINE>thunder_bridge/deployment/monitoring/`
+2. `docker-machine scp -r grafana <DOCKER_MACHINE_NAME>:<PATH_TO_FOLDER_ON_MACHINE>thunder_bridge/deployment/monitoring/`
+3. `docker-machine scp -r prometheus <DOCKER_MACHINE_NAME>:<PATH_TO_FOLDER_ON_MACHINE>thunder_bridge/deployment/monitoring/`
+4. `docker-machine scp config.json <DOCKER_MACHINE_NAME>:<PATH_TO_FOLDER_ON_MACHINE>thunder_bridge/deployment/monitoring/` 
