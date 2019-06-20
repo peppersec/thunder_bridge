@@ -1,7 +1,6 @@
 groups:
 - name: bridge
   rules:
-
     - alert: low_funds
       expr: bridge_leftTx < 10000
       labels:

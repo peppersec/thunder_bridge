@@ -9,7 +9,8 @@ services:
     image: prom/prometheus:v2.1.0
     restart: always
     volumes:
-      - ./prometheus/:/etc/prometheus/
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./config/alert.rules:/etc/prometheus/alert.rules
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -28,9 +29,9 @@ services:
       LETSENCRYPT_HOST: $MONITORING_HOSTNAME
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning/:/etc/grafana/provisioning/
-    env_file:
-      - ./grafana/config.monitoring
+      - ./config/grafana/:/etc/grafana/provisioning/
+      - ./config/grafana/dashboards/dashboard.json:/usr/share/grafana/public/dashboards/home.json
+    env_file: ./.env
     depends_on:
       - prometheus
 

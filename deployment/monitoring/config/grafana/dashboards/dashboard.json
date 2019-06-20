@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 2,
-  "iteration": 1560386225449,
+  "iteration": 1561039574335,
   "links": [],
   "panels": [
     {
@@ -58,7 +58,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.2.1",
+      "pluginVersion": "6.2.2",
       "repeat": "network",
       "repeatDirection": "v",
       "scopedVars": {
@@ -70,7 +70,7 @@
       },
       "targets": [
         {
-          "expr": "bridge_leftTx{token=\"FAU\", network=\"$network\"}",
+          "expr": "avg(bridge_leftTx{network=\"$network\"}) without (token)",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -209,10 +209,10 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "6.2.1",
+      "pluginVersion": "6.2.2",
       "repeat": null,
       "repeatDirection": "v",
-      "repeatIteration": 1560386225449,
+      "repeatIteration": 1561039574335,
       "repeatPanelId": 2,
       "scopedVars": {
         "network": {
@@ -223,7 +223,7 @@
       },
       "targets": [
         {
-          "expr": "bridge_leftTx{token=\"FAU\", network=\"$network\"}",
+          "expr": "avg(bridge_leftTx{network=\"$network\"}) without (token)",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -373,7 +373,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "bridge_balance{token=\"FAU\", network=\"$network\"}",
+          "expr": "avg(bridge_balance{network=\"$network\"}) without (token)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{validator}}",
@@ -539,7 +539,7 @@
       "renderer": "flot",
       "repeat": null,
       "repeatDirection": "v",
-      "repeatIteration": 1560386225449,
+      "repeatIteration": 1561039574335,
       "repeatPanelId": 5,
       "scopedVars": {
         "network": {
@@ -554,7 +554,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "bridge_balance{token=\"FAU\", network=\"$network\"}",
+          "expr": "avg(bridge_balance{network=\"$network\"}) without (token)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{validator}}",
@@ -660,8 +660,8 @@
       "scopedVars": {
         "token": {
           "selected": false,
-          "text": "FAU",
-          "value": "FAU"
+          "text": "Fau",
+          "value": "Fau"
         }
       },
       "sparkline": {
@@ -750,7 +750,7 @@
       ],
       "repeat": null,
       "repeatDirection": "v",
-      "repeatIteration": 1560386225449,
+      "repeatIteration": 1561039574335,
       "repeatPanelId": 12,
       "scopedVars": {
         "token": {
@@ -944,7 +944,7 @@
     ]
   },
   "timezone": "",
-  "title": "Bridge1",
-  "uid": "9MkQFjMZv",
-  "version": 19
+  "title": "Home",
+  "uid": "9MkQFjMZF",
+  "version": 2
 }
