@@ -31,14 +31,14 @@ async function getChainId(chain) {
     logger.debug('Getting chain id')
     const chainIdHex = await sendRawTx({
       chain,
-      method: 'eth_chainId',
+      method: 'net_version',
       params: []
     })
     const chainId = hexToNumber(chainIdHex)
     logger.debug({ chainId }, 'Chain id obtained')
     return chainId
   } catch (e) {
-    throw new Error(`Chain Id cannot be obtained`)
+    throw new Error(`Chain Id cannot be obtained. Reason: ${e.message}`)
   }
 }
 

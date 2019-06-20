@@ -193,7 +193,7 @@ var Eth = function Eth() {
         }),
         new Method({
             name: 'getChainId',
-            call: 'eth_chainId',
+            call: 'net_version',
             params: 0,
             outputFormatter: utils.hexToNumber
         }),
