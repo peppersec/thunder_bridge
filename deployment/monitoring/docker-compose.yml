@@ -27,6 +27,9 @@ services:
     environment:
       VIRTUAL_HOST: $MONITORING_HOSTNAME
       LETSENCRYPT_HOST: $MONITORING_HOSTNAME
+      GF_INSTALL_PLUGINS: camptocamp-prometheus-alertmanager-datasource
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
     volumes:
       - grafana_data:/var/lib/grafana
       - ./config/grafana/:/etc/grafana/provisioning/
@@ -39,7 +42,7 @@ services:
     image: prom/alertmanager
     restart: always
     volumes:
-      - ./alertmanager/:/etc/alertmanager/
+      - ./config/alertmanager.yml:/etc/alertmanager/config.yml
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
@@ -48,7 +51,6 @@ services:
     image: thundercore/bridge-monitor
     build: ../../monitor
     restart: always
-    env_file: ./.env
     volumes:
       - ./config.json:/app/config.json
 
