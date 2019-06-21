@@ -91,6 +91,14 @@ npm run test
 3. `docker-compose run bridge sendFromForeignToHome` to send bridgable token from Foreign to Home
 4. `docker-compose run bridge sendFromHomeToForeign` to send bridgable token from Home to Foreign
 
+### Reset last processed block and nonce
+
+1. `cd ../deployment/validator`
+2. `docker-compose run bridge resetLastBlock <WATCHER_NAME> <BLOCK_NUMBER>`
+    - `WATCHER_NAME` could be: `signature-request`, `affirmation-request`, `collected-signatures`
+3. `docker-compose run bridge resetNonce <NETWORK> <NONCE>`
+    - `NETWORK` could be: `home`, `foreign`
+
 ### Configuration parameters for testing
 
 | Variable | Description |
