@@ -13,17 +13,13 @@ Go to [deployment](./deployment) folder and follow instructions in **Validator**
 
 If the bridge does not handle an event properly (i.e. a transaction stalls due to a low gas price), the Redis DB can be rolled back. You must identify which watcher needs to re-run. For example, if the validator signatures were collected but the transaction with signatures was not sent to the Foreign network, the `collected-signatures` watcher must look at the block where the corresponding `CollectedSignatures` event was raised.
 
-Execute this command in the bridge root directory:
+Commands:
 
-for NPM installation:
-```shell
-bash ./reset-lastBlock.sh <watcher> <block num>
-```
-where the _watcher_ could be one of:
-
-- `signature-request`
-- `collected-signatures`
-- `affirmation-request`
+1. `cd ../deployment/validator`
+2. `docker-compose run bridge resetLastBlock <WATCHER_NAME> <BLOCK_NUMBER>`
+    - `WATCHER_NAME` could be: `signature-request`, `affirmation-request`, `collected-signatures`
+3. `docker-compose run bridge resetNonce <NETWORK> <NONCE>`
+    - `NETWORK` could be: `home`, `foreign`
 
 ## Configuration parameters
 
@@ -90,14 +86,6 @@ npm run test
 2. Make sure you have filled TESTING section in `.env`
 3. `docker-compose run bridge sendFromForeignToHome` to send bridgable token from Foreign to Home
 4. `docker-compose run bridge sendFromHomeToForeign` to send bridgable token from Home to Foreign
-
-### Reset last processed block and nonce
-
-1. `cd ../deployment/validator`
-2. `docker-compose run bridge resetLastBlock <WATCHER_NAME> <BLOCK_NUMBER>`
-    - `WATCHER_NAME` could be: `signature-request`, `affirmation-request`, `collected-signatures`
-3. `docker-compose run bridge resetNonce <NETWORK> <NONCE>`
-    - `NETWORK` could be: `home`, `foreign`
 
 ### Configuration parameters for testing
 
