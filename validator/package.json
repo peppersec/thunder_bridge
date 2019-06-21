@@ -17,7 +17,9 @@
     "postinstall": "npm install --prefix e2e && mkdir -p logs",
     "docker-message": "echo 'Please run a valid npm command'",
     "sendFromForeignToHome": "node scripts/erc20_to_erc20/sendFromForeignToHome.js",
-    "sendFromHomeToForeign": "node scripts/erc20_to_erc20/sendFromHomeToForeign.js"
+    "sendFromHomeToForeign": "node scripts/erc20_to_erc20/sendFromHomeToForeign.js",
+    "resetLastBlock": "node scripts/resetLastBlock.js",
+    "resetNonce": "node scripts/resetNonce.js"
   },
   "author": "",
   "license": "ISC",
