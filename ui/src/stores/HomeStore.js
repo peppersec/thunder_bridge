@@ -138,7 +138,7 @@ class HomeStore {
   networkName = process.env.REACT_APP_HOME_NETWORK_NAME || 'Unknown'
   filteredBlockNumber = 0
   homeBridge = {}
-  HOME_BRIDGE_ADDRESS = process.env.REACT_APP_HOME_BRIDGE_ADDRESS
+  HOME_BRIDGE_ADDRESS = process.env.REACT_APP_HOME_USDT_BRIDGE_ADDRESS
   explorerTxTemplate = process.env.REACT_APP_HOME_EXPLORER_TX_TEMPLATE || ''
   explorerAddressTemplate = process.env.REACT_APP_HOME_EXPLORER_ADDRESS_TEMPLATE || ''
   tokenContract = {}
@@ -154,9 +154,14 @@ class HomeStore {
     this.setHome()
   }
 
-  async setHome() {
+  async setHome(tokenName) {
+    if (tokenName === 'DAI') {
+      this.HOME_BRIDGE_ADDRESS = process.env.REACT_APP_HOME_DAI_BRIDGE_ADDRESS
+    } else {
+      this.HOME_BRIDGE_ADDRESS = process.env.REACT_APP_HOME_USDT_BRIDGE_ADDRESS
+    }
     if (!this.rootStore.bridgeModeInitialized) {
-      setTimeout(() => this.setHome(), 200)
+      setTimeout(() => this.setHome(tokenName), 200)
       return
     }
     const { HOME_ABI } = getBridgeABIs(this.rootStore.bridgeMode)
