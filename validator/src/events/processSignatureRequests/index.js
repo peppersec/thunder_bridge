@@ -6,6 +6,7 @@ const rootLogger = require('../../services/logger')
 const { web3Home } = require('../../services/web3')
 const { createMessage } = require('../../utils/message')
 const estimateGas = require('./estimateGas')
+const privateKey = require('../../../config/private-keys.config')
 const {
   AlreadyProcessedError,
   AlreadySignedError,
@@ -17,8 +18,6 @@ const {
   OBSERVABLE_METHODS,
   ZERO_ADDRESS
 } = require('../../utils/constants')
-
-const { VALIDATOR_ADDRESS_PRIVATE_KEY } = process.env
 
 const limit = promiseLimit(MAX_CONCURRENT_EVENTS)
 
@@ -82,7 +81,7 @@ function processSignatureRequestsBuilder(config) {
           expectedMessageLength
         })
 
-        const signature = web3Home.eth.accounts.sign(message, `0x${VALIDATOR_ADDRESS_PRIVATE_KEY}`)
+        const signature = web3Home.eth.accounts.sign(message, `0x${privateKey.getValidatorKey()}`)
 
         let gasEstimate
         try {
