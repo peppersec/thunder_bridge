@@ -109,7 +109,7 @@ class ForeignStore {
   foreignBridge = {}
   tokenContract = {}
   tokenDecimals = 18
-  FOREIGN_BRIDGE_ADDRESS = process.env.REACT_APP_FOREIGN_BRIDGE_ADDRESS
+  FOREIGN_BRIDGE_ADDRESS = process.env.REACT_APP_FOREIGN_USDT_BRIDGE_ADDRESS
   explorerTxTemplate = process.env.REACT_APP_FOREIGN_EXPLORER_TX_TEMPLATE || ''
   explorerAddressTemplate = process.env.REACT_APP_FOREIGN_EXPLORER_ADDRESS_TEMPLATE || ''
 
@@ -123,9 +123,14 @@ class ForeignStore {
     this.setForeign()
   }
 
-  async setForeign() {
+  async setForeign(tokenName) {
+    if (tokenName === 'DAI') {
+      this.FOREIGN_BRIDGE_ADDRESS = process.env.REACT_APP_FOREIGN_DAI_BRIDGE_ADDRESS
+    } else {
+      this.FOREIGN_BRIDGE_ADDRESS = process.env.REACT_APP_FOREIGN_USDT_BRIDGE_ADDRESS
+    }
     if (!this.rootStore.bridgeModeInitialized) {
-      setTimeout(() => this.setForeign(), 200)
+      setTimeout(() => this.setForeign(tokenName), 200)
       return
     }
     const { FOREIGN_ABI } = getBridgeABIs(this.rootStore.bridgeMode)

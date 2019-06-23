@@ -64,7 +64,8 @@ const networks = {
   61: 'Ethereum Classic',
   77: 'Sokol',
   99: 'POA Network',
-  100: 'Dai Chain'
+  100: 'Dai Chain',
+  108: 'Thunder'
 }
 
 export const getNetworkName = id => networks[id] || 'Unknown'

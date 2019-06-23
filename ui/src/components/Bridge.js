@@ -62,6 +62,12 @@ export class Bridge extends React.Component {
     })
   }
 
+  setNewToken = (tokenName) => {
+    const { homeStore, foreignStore } = this.props.RootStore
+    homeStore.setHome(tokenName)
+    foreignStore.setForeign(tokenName)
+  }
+
   async _sendToHome(amount) {
     const { web3Store, homeStore, alertStore, txStore, bridgeMode } = this.props.RootStore
     const isErcToErcMode = bridgeMode === BRIDGE_MODES.ERC_TO_ERC
@@ -338,7 +344,7 @@ export class Bridge extends React.Component {
   }
 
   render() {
-    const { web3Store, foreignStore, homeStore } = this.props.RootStore
+    const { web3Store, foreignStore, homeStore, alertStore } = this.props.RootStore
     const { reverse, showModal, modalData, showConfirmation, confirmationData } = this.state
     const formCurrency = reverse ? foreignStore.symbol : homeStore.symbol
 
@@ -387,7 +393,11 @@ export class Bridge extends React.Component {
                   side="right"
                 />
               </div>
-              <BridgeChoose />
+              <BridgeChoose 
+                setNewTokenHandler={this.setNewToken}
+                web3Store = {web3Store}
+                alert = {alertStore}
+              />
             </div>
           </div>
           <ModalContainer
