@@ -6,53 +6,33 @@ volumes:
 
 services:
   prometheus:
-    image: prom/prometheus:v2.1.0
+    build: ./config/prometheus
     restart: always
     volumes:
-      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./config/alert.rules:/etc/prometheus/alert.rules
       - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
     depends_on:
       - alertmanager
 
   grafana:
-    image: grafana/grafana
+    build: ./config/grafana
     restart: always
-    user: "104"
     environment:
       VIRTUAL_HOST: $MONITORING_HOSTNAME
       LETSENCRYPT_HOST: $MONITORING_HOSTNAME
-      GF_INSTALL_PLUGINS: camptocamp-prometheus-alertmanager-datasource
-      GF_USERS_ALLOW_SIGN_UP: 'false'
-      GF_AUTH_ANONYMOUS_ENABLED: 'true'
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./config/grafana/:/etc/grafana/provisioning/
-      - ./config/grafana/dashboards/dashboard.json:/usr/share/grafana/public/dashboards/home.json
     env_file: ./.env
     depends_on:
       - prometheus
 
   alertmanager:
-    image: prom/alertmanager
+    build: ./config/alertmanager
     restart: always
-    volumes:
-      - ./config/alertmanager.yml:/etc/alertmanager/config.yml
-    command:
-      - '--config.file=/etc/alertmanager/config.yml'
-      - '--storage.path=/alertmanager'
 
   monitor:
     image: thundercore/bridge-monitor
     build: ../../monitor
     restart: always
-    volumes:
-      - ./config.json:/app/config.json
 
 networks:
   default:
