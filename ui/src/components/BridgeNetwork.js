@@ -24,8 +24,8 @@ export const BridgeNetwork = ({
   )
 
   return (
-    <div className={`network-container-${containerName}`}>
-      {containerName === 'home' &&
+    <div className={`network-container-${side}`}>
+      {side === 'left' &&
         showMore
       }
       <div className="network-container">
@@ -41,7 +41,7 @@ export const BridgeNetwork = ({
           {formattedBalance} <span className="network-balance-currency">{currency}</span>
         </div>
       </div>
-      {containerName === 'foreign' &&
+      {side === 'right' &&
         showMore
       }
     </div>

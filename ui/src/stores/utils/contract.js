@@ -130,24 +130,14 @@ export const parseValidatorEvent = event => {
 
 export const getName = contract => contract.methods.name().call()
 
-export const getFeeManager = async contract => {
-  try {
-    return await contract.methods.feeManagerContract().call()
-  } catch (e) {
-    return ZERO_ADDRESS
-  }
-}
-
-export const getFeeManagerMode = contract => contract.methods.getFeeManagerMode().call()
-
 export const getHomeFee = async contract => {
-  const feeInWei = await contract.methods.getHomeFee().call()
-  return new BN(fromWei(feeInWei.toString()))
+  const feePercent = await contract.methods.feePercent().call()
+  return new BN(feePercent)
 }
 
 export const getForeignFee = async contract => {
-  const feeInWei = await contract.methods.getForeignFee().call()
-  return new BN(fromWei(feeInWei.toString()))
+  const feePercent = await contract.methods.feePercent().call()
+  return new BN(feePercent)
 }
 
 export const getDeployedAtBlock = async contract => {
