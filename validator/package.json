@@ -26,6 +26,7 @@
   "dependencies": {
     "amqp-connection-manager": "^2.0.0",
     "amqplib": "^0.5.2",
+    "aws-sdk": "^2.480.0",
     "bignumber.js": "^7.2.1",
     "dotenv": "^5.0.1",
     "http-list-provider": "0.0.5",

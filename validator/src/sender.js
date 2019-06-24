@@ -7,6 +7,7 @@ const logger = require('./services/logger')
 const rpcUrlsManager = require('./services/getRpcUrlsManager')
 const { sendTx } = require('./tx/sendTx')
 const { getNonce, getChainId } = require('./tx/web3')
+const privateKey = require('../config/private-keys.config')
 const {
   addExtraGas,
   checkHTTPS,
@@ -17,9 +18,9 @@ const {
 } = require('./utils/utils')
 const { EXIT_CODES, EXTRA_GAS_PERCENTAGE } = require('./utils/constants')
 
-const { VALIDATOR_ADDRESS_PRIVATE_KEY, REDIS_LOCK_TTL } = process.env
+const { REDIS_LOCK_TTL } = process.env
 
-const VALIDATOR_ADDRESS = privateKeyToAddress(VALIDATOR_ADDRESS_PRIVATE_KEY)
+const VALIDATOR_ADDRESS = privateKeyToAddress(privateKey.getValidatorKey())
 
 if (process.argv.length < 3) {
   logger.error('Please check the number of arguments, config file was not provided')
@@ -124,7 +125,7 @@ async function main({ msg, ackMsg, nackMsg, sendToQueue, channel }) {
           gasPrice: gasPrice.toString(10),
           amount: '0',
           gasLimit,
-          privateKey: VALIDATOR_ADDRESS_PRIVATE_KEY,
+          privateKey: privateKey.getValidatorKey(),
           to: job.to,
           chainId,
           web3: web3Instance
