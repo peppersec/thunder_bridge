@@ -33,6 +33,7 @@ let lastProcessedBlock = BN.max(config.startBlock.sub(ONE), ZERO)
 
 async function initialize() {
   try {
+    await config.initialize()
     const checkHttps = checkHTTPS(process.env.ALLOW_HTTP, logger)
 
     rpcUrlsManager.homeUrls.forEach(checkHttps('home'))

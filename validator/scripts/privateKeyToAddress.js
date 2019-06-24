@@ -5,6 +5,9 @@ require('dotenv').config({
 const { privateKeyToAddress } = require('../src/utils/utils')
 const privateKey = require('../config/private-keys.config')
 
-const address = privateKeyToAddress(privateKey.getValidatorKey())
-
-console.log(address)
+async function main() {
+  const key = await privateKey.getValidatorKey()
+  const address = privateKeyToAddress(key)
+  console.log(address)
+}
+main()

@@ -5,6 +5,7 @@ const { web3Home } = require('../src/services/web3')
 
 module.exports = {
   ...baseConfig.bridgeConfig,
+  initialize: baseConfig.initialize,
   queue: 'home',
   id: 'home',
   name: 'sender-home',

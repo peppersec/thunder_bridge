@@ -80,8 +80,8 @@ function processSignatureRequestsBuilder(config) {
           bridgeAddress: config.foreignBridgeAddress,
           expectedMessageLength
         })
-
-        const signature = web3Home.eth.accounts.sign(message, `0x${privateKey.getValidatorKey()}`)
+        const pk = await privateKey.getValidatorKey()
+        const signature = web3Home.eth.accounts.sign(message, `0x${pk}`)
 
         let gasEstimate
         try {

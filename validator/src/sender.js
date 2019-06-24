@@ -20,8 +20,6 @@ const { EXIT_CODES, EXTRA_GAS_PERCENTAGE } = require('./utils/constants')
 
 const { REDIS_LOCK_TTL } = process.env
 
-const VALIDATOR_ADDRESS = privateKeyToAddress(privateKey.getValidatorKey())
-
 if (process.argv.length < 3) {
   logger.error('Please check the number of arguments, config file was not provided')
   process.exit(EXIT_CODES.GENERAL_ERROR)
@@ -33,9 +31,12 @@ const web3Instance = config.web3
 const nonceLock = `lock:${config.id}:nonce`
 const nonceKey = `${config.id}:nonce`
 let chainId = 0
-
+let VALIDATOR_ADDRESS
 async function initialize() {
   try {
+    await config.initialize()
+    VALIDATOR_ADDRESS = config.validatorAddress
+
     const checkHttps = checkHTTPS(process.env.ALLOW_HTTP, logger)
 
     rpcUrlsManager.homeUrls.forEach(checkHttps('home'))
@@ -125,7 +126,7 @@ async function main({ msg, ackMsg, nackMsg, sendToQueue, channel }) {
           gasPrice: gasPrice.toString(10),
           amount: '0',
           gasLimit,
-          privateKey: privateKey.getValidatorKey(),
+          privateKey: await privateKey.getValidatorKey(),
           to: job.to,
           chainId,
           web3: web3Instance

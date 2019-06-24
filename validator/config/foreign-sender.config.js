@@ -5,6 +5,7 @@ const { web3Foreign } = require('../src/services/web3')
 
 module.exports = {
   ...baseConfig.bridgeConfig,
+  initialize: baseConfig.initialize,
   queue: 'foreign',
   id: 'foreign',
   name: 'sender-foreign',
