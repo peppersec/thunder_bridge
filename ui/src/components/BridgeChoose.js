@@ -39,7 +39,7 @@ export const BridgeChoose = (props) => {
           `Please, change network to ${props.web3Store.foreignNet.name} to transfer ${mode.from}`
         )
       } else {
-        props.setNewTokenHandler(mode.from)
+        props.setNewTokenHandler(mode.to)
       }
     }
   }

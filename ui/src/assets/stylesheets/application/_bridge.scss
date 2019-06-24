@@ -83,7 +83,7 @@
                 }
             }
 
-            .network-container-home {
+            .network-container-left {
                 display: flex;
                 padding: 70px 1% 70px 5%;
                 width: 22%;
@@ -94,7 +94,7 @@
                     justify-content: center;
                 }
             }
-            .network-container-foreign {
+            .network-container-right {
                 display: flex;
                 padding: 70px 5% 70px 1%;
                 width: 22%;
@@ -544,6 +544,7 @@
                 .details-label {
                     color: $modal-text-color;
                     font-size: 14px;
+                    padding-right: 10px;
                 }
                 .details-description {
                     color: $modal-link-color;

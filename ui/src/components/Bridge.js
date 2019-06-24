@@ -377,7 +377,7 @@ export class Bridge extends React.Component {
                 <BridgeNetwork
                   balance={reverse ? foreignStore.balance : homeStore.getDisplayedBalance()}
                   currency={reverse ? foreignStore.symbol : homeStore.symbol}
-                  isHome={true}
+                  isHome={!reverse}
                   networkSubtitle={reverse ? foreignNetworkSubtitle : homeNetworkSubtitle}
                   networkTitle={reverse ? foreignNetworkName : homeNetworkName}
                   showModal={reverse ? this.loadForeignDetails : this.loadHomeDetails}
@@ -393,7 +393,7 @@ export class Bridge extends React.Component {
                 <BridgeNetwork
                   balance={reverse ? homeStore.getDisplayedBalance() : foreignStore.balance}
                   currency={reverse ? homeStore.symbol : foreignStore.symbol}
-                  isHome={false}
+                  isHome={reverse}
                   networkSubtitle={reverse ? homeNetworkSubtitle : foreignNetworkSubtitle}
                   networkTitle={reverse ? homeNetworkName : foreignNetworkName}
                   showModal={reverse ? this.loadHomeDetails : this.loadForeignDetails}
