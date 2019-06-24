@@ -13,10 +13,7 @@ import {
   getDecimals,
   getErc20TokenAddress,
   getName,
-  getFeeManager,
-  getHomeFee,
-  getFeeManagerMode,
-  ZERO_ADDRESS,
+  getForeignFee,
   getDeployedAtBlock,
   getValidatorList,
   getTokenType
@@ -230,20 +227,7 @@ class ForeignStore {
 
   @action
   async getFee() {
-    const feeManager = await getFeeManager(this.foreignBridge)
-    if (feeManager !== ZERO_ADDRESS) {
-      const feeManagerModeHash = await getFeeManagerMode(this.foreignBridge)
-      this.feeManager.feeManagerMode = decodeFeeManagerMode(feeManagerModeHash)
-
-      if (this.feeManager.feeManagerMode === FEE_MANAGER_MODE.ONE_DIRECTION) {
-        this.feeManager.foreignFee = new BN(0)
-        this.feeManager.homeFee = await getHomeFee(this.foreignBridge)
-      }
-    } else {
-      this.feeManager.feeManagerMode = FEE_MANAGER_MODE.UNDEFINED
-      this.feeManager.homeFee = new BN(0)
-      this.feeManager.foreignFee = new BN(0)
-    }
+    this.feeManager.foreignFee = await getForeignFee(this.foreignBridge)
   }
 
   @action

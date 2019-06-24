@@ -12,7 +12,6 @@ import { BridgeChoose } from './index'
 import { ModalContainer } from './ModalContainer'
 import { NetworkDetails } from './NetworkDetails'
 import { TransferAlert } from './TransferAlert'
-import { getFeeToApply, validFee } from '../stores/utils/rewardable'
 import { inject, observer } from 'mobx-react'
 import { toDecimals } from '../stores/utils/decimals'
 
@@ -218,11 +217,19 @@ export class Bridge extends React.Component {
 
     let fee = null
     let finalAmount = new BN(amount)
-    const feeToApply = getFeeToApply(homeStore.feeManager, foreignStore.feeManager, !reverse)
-
-    if (validFee(feeToApply)) {
-      fee = feeToApply.multipliedBy(100)
-      finalAmount = finalAmount.multipliedBy(1 - feeToApply)
+    const oneHundredPercent = new BN(10000)
+    if (reverse) { // foreign to home
+      const feeToApply = homeStore.feeManager.homeFee
+      if (!feeToApply.isZero()) {
+        fee = feeToApply.dividedBy(100)
+        finalAmount = finalAmount.multipliedBy(oneHundredPercent.minus(feeToApply)).dividedBy(oneHundredPercent)
+      }
+    } else { // home to foreign
+      const feeToApply = foreignStore.feeManager.foreignFee
+      if (!feeToApply.isZero()) {
+        fee = feeToApply.dividedBy(100)
+        finalAmount = finalAmount.multipliedBy(oneHundredPercent.minus(feeToApply)).dividedBy(oneHundredPercent)
+      }
     }
 
     const confirmationData = {

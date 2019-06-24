@@ -17,11 +17,7 @@ import {
   mintedTotally,
   totalBurntCoins,
   getName,
-  getFeeManager,
   getHomeFee,
-  getForeignFee,
-  getFeeManagerMode,
-  ZERO_ADDRESS,
   getValidatorList,
   getDeployedAtBlock
 } from './utils/contract'
@@ -269,23 +265,7 @@ class HomeStore {
 
   @action
   async getFee() {
-    const feeManager = await getFeeManager(this.homeBridge)
-    if (feeManager !== ZERO_ADDRESS) {
-      const feeManagerModeHash = await getFeeManagerMode(this.homeBridge)
-      this.feeManager.feeManagerMode = decodeFeeManagerMode(feeManagerModeHash)
-
-      if (this.feeManager.feeManagerMode === FEE_MANAGER_MODE.BOTH_DIRECTIONS) {
-        this.feeManager.homeFee = await getHomeFee(this.homeBridge)
-        this.feeManager.foreignFee = await getForeignFee(this.homeBridge)
-      } else {
-        this.feeManager.homeFee = new BN(0)
-        this.feeManager.foreignFee = await getForeignFee(this.homeBridge)
-      }
-    } else {
-      this.feeManager.feeManagerMode = FEE_MANAGER_MODE.UNDEFINED
-      this.feeManager.homeFee = new BN(0)
-      this.feeManager.foreignFee = new BN(0)
-    }
+    this.feeManager.homeFee = await getHomeFee(this.homeBridge)
   }
 
   @action
@@ -480,6 +460,7 @@ class HomeStore {
   }
 
   calculateCollectedFees() {
+    // TODO
     if (
       !this.statistics.finished ||
       !this.rootStore.foreignStore.feeEventsFinished ||
