@@ -61,10 +61,12 @@ export class Bridge extends React.Component {
     })
   }
 
-  setNewToken = (tokenName) => {
+  setNewToken = async (tokenName) => {
     const { homeStore, foreignStore } = this.props.RootStore
-    homeStore.setHome(tokenName)
-    foreignStore.setForeign(tokenName)
+    const homePromise = homeStore.setHome(tokenName)
+    const foreignPromise = foreignStore.setForeign(tokenName)
+    await Promise.all([homePromise, foreignPromise])
+    this.props.RootStore.alertStore.setLoading(false)
   }
 
   async _sendToHome(amount) {
@@ -404,6 +406,9 @@ export class Bridge extends React.Component {
                 setNewTokenHandler={this.setNewToken}
                 web3Store = {web3Store}
                 alert = {alertStore}
+                isHome = {reverse}
+                foreignStore = {foreignStore}
+                homeStore = {homeStore}
               />
             </div>
           </div>

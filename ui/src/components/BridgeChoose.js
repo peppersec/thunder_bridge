@@ -31,6 +31,7 @@ export const BridgeChoose = (props) => {
           `Please, change network to ${props.web3Store.homeNet.name} to transfer ${mode.from}`
         )
       } else {
+        props.alert.setLoading(true)
         props.setNewTokenHandler(mode.from)
       }
     } else {
@@ -39,7 +40,20 @@ export const BridgeChoose = (props) => {
           `Please, change network to ${props.web3Store.foreignNet.name} to transfer ${mode.from}`
         )
       } else {
+        props.alert.setLoading(true)
         props.setNewTokenHandler(mode.to)
+      }
+    }
+  }
+
+  const handleChecked = (item) => {
+    if (props.isHome) {
+      if (item.to === props.homeStore.symbol) {
+        return true
+      }
+    } else {
+      if (item.to === props.foreignStore.symbol) {
+        return true
       }
     }
   }
@@ -49,7 +63,7 @@ export const BridgeChoose = (props) => {
       {chooseItems.map((item, index) => {
         return (
           <label key={index} className="bridge-choose-button">
-            <input name="choose" type="radio" className="bridge-choose-radio" onChange={() => handleOptionChange(item)}  />
+            <input name="choose" type="radio" className="bridge-choose-radio" onChange={() => handleOptionChange(item)} checked={handleChecked(item)}  />
             <span className="bridge-choose-container">
               <span className="bridge-choose-logo-container">
                 <span className={chooseLogoClass(item.from)} />
