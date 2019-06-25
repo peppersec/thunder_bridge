@@ -2,6 +2,7 @@ const ForeignBridge = artifacts.require("ForeignBridgeErcToErc.sol");
 const ForeignBridgeV2 = artifacts.require("ForeignBridgeV2.sol");
 const BridgeValidators = artifacts.require("BridgeValidators.sol");
 const EternalStorageProxy = artifacts.require("EternalStorageProxy.sol");
+const TetherToken = artifacts.require("TetherToken.sol");
 
 const ERC677BridgeToken = artifacts.require("ERC677BridgeToken.sol");
 const {ERROR_MSG, ZERO_ADDRESS, INVALID_ARGUMENTS} = require('../setup');
@@ -97,6 +98,36 @@ contract('ForeignBridge_ERC20_to_ERC20', async (accounts) => {
       balanceAfterBridge.should.be.bignumber.equal(0)
       true.should.be.equal(await foreignBridge.relayedMessages(transactionHash))
     })
+
+    it('should executeSignatures with broken ERC20 (USDT)', async () => {
+      var value = web3.toBigNumber(web3.toWei(0.25, "ether"));
+      const initSupply = web3.toBigNumber(web3.toWei(100000, "ether"));
+      foreignBridge = await ForeignBridge.new()
+      token = await TetherToken.new(initSupply.toFixed(), "Tether USD", "USDT", 6);
+      const feePercent = '0';
+      await foreignBridge.initialize(validatorContract.address, token.address, requireBlockConfirmations, gasPrice, maxPerTx, homeDailyLimit, homeMaxPerTx, owner, feePercent);
+      await token.transfer(foreignBridge.address, value);
+
+      var recipientAccount = accounts[3];
+      const balanceBefore = await token.balanceOf(recipientAccount)
+
+      var transactionHash = "0x1045bfe274b88120a6b1e5d01b5ec00ab5d01098346e90e7c7a3c9b8f0181c80";
+      var message = createMessage(recipientAccount, value, transactionHash, foreignBridge.address);
+      var signature = await sign(authorities[0], message)
+      var vrs = signatureToVRS(signature);
+      false.should.be.equal(await foreignBridge.relayedMessages(transactionHash))
+      const {logs} = await foreignBridge.executeSignatures([vrs.v], [vrs.r], [vrs.s], message).should.be.fulfilled
+      logs[0].event.should.be.equal("RelayedMessage")
+      logs[0].args.recipient.should.be.equal(recipientAccount)
+      logs[0].args.value.should.be.bignumber.equal(value)
+
+      const balanceAfter = await token.balanceOf(recipientAccount);
+      const balanceAfterBridge = await token.balanceOf(foreignBridge.address);
+      balanceAfter.should.be.bignumber.equal(balanceBefore.add(value))
+      balanceAfterBridge.should.be.bignumber.equal(0)
+      true.should.be.equal(await foreignBridge.relayedMessages(transactionHash))
+    })
+
     it('should allow second withdrawal with different transactionHash but same recipient and value', async ()=> {
       var recipientAccount = accounts[3];
       const balanceBefore = await token.balanceOf(recipientAccount)

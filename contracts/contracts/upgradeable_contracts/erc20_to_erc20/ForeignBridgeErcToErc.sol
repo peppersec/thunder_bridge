@@ -57,24 +57,30 @@ contract ForeignBridgeErcToErc is BasicBridge, BasicForeignBridge, FeeManager {
         return ERC20Basic(addressStorage[keccak256(abi.encodePacked("erc20token"))]);
     }
 
+    function tokenTransfer(address _recipient, uint256 _amount) internal returns(bool) {
+        return erc20token().call(bytes4(keccak256("transfer(address,uint256)")), _recipient, _amount);
+    }
+
     function onExecuteMessage(address _recipient, uint256 _amount) internal returns(bool){
         setTotalExecutedPerDay(getCurrentDay(), totalExecutedPerDay(getCurrentDay()).add(_amount));
         if (feePercent() == 0) {
-            return erc20token().transfer(_recipient, _amount);
+            return tokenTransfer(_recipient, _amount);
         } else {
+            bool result = true;
             uint256 userValue = subtractFee(_amount);
             address[] memory validators = validatorContract().validatorsList();
             uint256 entireValidatorValue = _amount.sub(userValue);
             uint256 particularValidatorValue = entireValidatorValue.div(validators.length);
             for(uint256 i = 0; i < validators.length - 1; i++) {
-                erc20token().transfer(validators[i], particularValidatorValue);
+                result = result && tokenTransfer(validators[i], particularValidatorValue);
             }
             // to avoid round error we need to calculate the fee value in other way for the last validator
             uint256 lastValidatorValue = entireValidatorValue.sub(
                 particularValidatorValue.mul(validators.length.sub(1))
             );
-            erc20token().transfer(validators[validators.length - 1], lastValidatorValue);
-            return erc20token().transfer(_recipient, userValue);
+            result = result && tokenTransfer(validators[validators.length - 1], lastValidatorValue);
+            result = result && tokenTransfer(_recipient, userValue);
+            return result;
         }
     }
 
