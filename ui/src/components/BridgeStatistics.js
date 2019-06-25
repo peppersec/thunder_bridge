@@ -28,7 +28,7 @@ export const BridgeStatistics = ({
     <div className="separator" />
     <DataBlock
       description={`${foreignSymbol} Tokens Amount`}
-      value={numeral(foreignSupply).format('0.00 a', Math.floor)}
+      value={numeral(foreignSupply).format('0,0.00 a', Math.floor)}
       type={foreignSymbol}
     />
   </div>
