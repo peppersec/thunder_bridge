@@ -60,12 +60,12 @@ class TxStore {
   }
 
   @action
-  async erc677transferAndCall({ to, from, value, contract, tokenAddress }) {
+  async erc677transferAndCall({ to, from, value, contract, tokenAddress, recipient }) {
     try {
       return this.web3Store.getWeb3Promise.then(async () => {
         if (this.web3Store.defaultAccount.address) {
-          const bytes32Address = `0x000000000000000000000000${this.web3Store.defaultAccount.address.slice(2)}`
-          const data = await contract.methods.transferAndCall(to, value, bytes32Address).encodeABI()
+          const recipientData = `0x000000000000000000000000${recipient.slice(2)}`
+          const data = await contract.methods.transferAndCall(to, value, recipientData).encodeABI()
           return this.doSend({ to: tokenAddress, from, value: '0x00', data, sentValue: value })
         } else {
           this.alertStore.pushError('Please unlock wallet')
@@ -77,13 +77,15 @@ class TxStore {
   }
 
   @action
-  async erc20transfer({ to, from, value }) {
+  async erc20transfer({ to, from, value, recipient }) {
     try {
       return this.web3Store.getWeb3Promise.then(async () => {
         if (this.web3Store.defaultAccount.address) {
-          const data = await this.foreignStore.tokenContract.methods
+          let data = await this.foreignStore.tokenContract.methods
             .transfer(to, value)
             .encodeABI({ from: this.web3Store.defaultAccount.address })
+          data += `000000000000000000000000${recipient.slice(2)}`
+
           return this.doSend({
             to: this.foreignStore.tokenAddress,
             from,

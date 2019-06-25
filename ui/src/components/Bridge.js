@@ -21,6 +21,7 @@ export class Bridge extends React.Component {
   state = {
     reverse: false,
     amount: '',
+    recipient: '',
     modalData: {},
     confirmationData: {},
     showModal: false,
@@ -45,6 +46,9 @@ export class Bridge extends React.Component {
             reverse
           })
         }
+        this.setState({
+          recipient: web3Store.defaultAccount.address
+        })
       }
     })
   }
@@ -69,7 +73,7 @@ export class Bridge extends React.Component {
     this.props.RootStore.alertStore.setLoading(false)
   }
 
-  async _sendToHome(amount) {
+  async _sendToHome(amount, recipient) {
     const { web3Store, homeStore, alertStore, txStore, bridgeMode } = this.props.RootStore
     const isErcToErcMode = bridgeMode === BRIDGE_MODES.ERC_TO_ERC
     const { isLessThan, isGreaterThan } = this
@@ -112,7 +116,8 @@ export class Bridge extends React.Component {
             from: web3Store.defaultAccount.address,
             value: toDecimals(amount, homeStore.tokenDecimals),
             contract: homeStore.tokenContract,
-            tokenAddress: homeStore.tokenAddress
+            tokenAddress: homeStore.tokenAddress,
+            recipient
           })
         } else {
           const value = toHex(toDecimals(amount, homeStore.tokenDecimals))
@@ -130,7 +135,7 @@ export class Bridge extends React.Component {
     }
   }
 
-  async _sendToForeign(amount) {
+  async _sendToForeign(amount, recipient) {
     const { web3Store, foreignStore, alertStore, txStore } = this.props.RootStore
     const isExternalErc20 = foreignStore.tokenType === ERC_TYPES.ERC20
     const { isLessThan, isGreaterThan } = this
@@ -173,7 +178,8 @@ export class Bridge extends React.Component {
           return await txStore.erc20transfer({
             to: foreignStore.FOREIGN_BRIDGE_ADDRESS,
             from: web3Store.defaultAccount.address,
-            value: toDecimals(amount, foreignStore.tokenDecimals)
+            value: toDecimals(amount, foreignStore.tokenDecimals),
+            recipient
           })
         } else {
           return await txStore.erc677transferAndCall({
@@ -213,7 +219,7 @@ export class Bridge extends React.Component {
       return
     }
 
-    const { reverse } = this.state
+    const { reverse, recipient } = this.state
     const homeDisplayName = homeStore.networkName
     const foreignDisplayName = foreignStore.networkName
 
@@ -242,7 +248,8 @@ export class Bridge extends React.Component {
       fromAmount: amount,
       toAmount: finalAmount,
       fee,
-      reverse
+      reverse,
+      recipient
     }
 
     this.setState({ showConfirmation: true, confirmationData })
@@ -250,7 +257,7 @@ export class Bridge extends React.Component {
 
   onTransferConfirmation = async () => {
     const { alertStore } = this.props.RootStore
-    const { reverse } = this.state
+    const { reverse, recipient } = this.state
 
     this.setState({ showConfirmation: false, confirmationData: {} })
     const amount = this.state.amount.trim()
@@ -261,9 +268,9 @@ export class Bridge extends React.Component {
 
     try {
       if (reverse) {
-        await this._sendToForeign(amount)
+        await this._sendToForeign(amount, recipient)
       } else {
-        await this._sendToHome(amount)
+        await this._sendToHome(amount, recipient)
       }
     } catch (e) {
       if (
@@ -354,7 +361,7 @@ export class Bridge extends React.Component {
 
   render() {
     const { web3Store, foreignStore, homeStore, alertStore } = this.props.RootStore
-    const { reverse, showModal, modalData, showConfirmation, confirmationData } = this.state
+    const { reverse, showModal, modalData, showConfirmation, confirmationData, recipient } = this.state
     const formCurrency = reverse ? foreignStore.symbol : homeStore.symbol
 
     if (showModal && Object.keys(modalData).length !== 0) {
@@ -388,9 +395,11 @@ export class Bridge extends React.Component {
                 <BridgeForm
                   currency={formCurrency}
                   displayArrow={!web3Store.metamaskNotSetted}
-                  onInputChange={this.handleInputChange('amount')}
+                  onAmountInputChange={this.handleInputChange('amount')}
+                  onRecipientInputChange={this.handleInputChange('recipient')}
                   onTransfer={this.onTransfer}
                   reverse={reverse}
+                  recipient={recipient}
                 />
                 <BridgeNetwork
                   balance={reverse ? homeStore.getDisplayedBalance() : foreignStore.balance}
@@ -406,7 +415,7 @@ export class Bridge extends React.Component {
                 setNewTokenHandler={this.setNewToken}
                 web3Store = {web3Store}
                 alert = {alertStore}
-                isHome = {reverse}
+                isHome = {!reverse}
                 foreignStore = {foreignStore}
                 homeStore = {homeStore}
               />

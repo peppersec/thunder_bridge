@@ -13,7 +13,8 @@ export const TransferAlert = ({
   fromAmount,
   toAmount,
   fee,
-  reverse
+  reverse,
+  recipient
 }) => {
   const formattedFromAmount = numeral(fromAmount).format('0,0[.][000000000000000000]', Math.floor)
   const formattedToAmount = numeral(toAmount).format('0,0[.][000000000000000000]', Math.floor)
@@ -39,6 +40,9 @@ export const TransferAlert = ({
         <p className="transfer-description" data-testid="transfer-description">
           <strong>{fee && `Fee: ${fee.toString()}%`}</strong>
           <br />
+          <strong>{recipient && `Recipient: ${recipient}`}</strong>
+        </p>
+        <p className="transfer-description">
           Please confirm that you would like to send <strong>{formattedFromAmount}</strong>{' '}
           {fromCurrency} from {from} to receive <strong>{formattedToAmount}</strong> {toCurrency} on{' '}
           {to}.
