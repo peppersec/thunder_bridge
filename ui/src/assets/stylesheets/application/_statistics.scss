@@ -1,27 +1,32 @@
 .statistics-page {
   display: flex;
   justify-content: center;
+  width: 880px;
+  margin: 0 auto;
+
+  @media screen and (max-width: $tablet-width-landscape) {
+    width: 90%;
+  }
+
+  @media (min-width: 1200px) {
+    width: 1140px;
+  }
 
   .statistics-page-container {
     display: flex;
     flex-direction: column;
-    width: 880px;
     padding: 10px 40px 40px;
     background-color: #fff;
     border-radius: 10px;
     margin-top: 40px;
-
-    @media screen and (max-width: $tablet-width-landscape) {
-      width: 90%;
-    }
+    margin-bottom: 40px;
+    width: 100%;
 
     @media screen and (max-width: $tablet-width) {
       padding: 0 15px;
-      margin-top: 10px;
-    }
-
-    @media (min-width: 1200px) {
-      width: 1140px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      width: 90%;
     }
 
     .statistics-title {
@@ -30,8 +35,12 @@
       font-size: 24px;
       font-weight: 700;
       line-height: 1.5;
-      margin: 0 0 20px;
+      margin-bottom: 20px;
       text-align: left;
+
+      @media screen and (max-width: $tablet-width) {
+        margin-bottom: 0;
+      }
     }
 
     .statistics-bridge-container {
@@ -39,15 +48,20 @@
       flex-direction: column;
       padding-top: 30px;
 
+      @media screen and (max-width: $tablet-width) {
+        padding-top: 20px;
+      }
+
       .statistics-bridge-data {
         display: flex;
         justify-content: space-evenly;
 
         @media screen and (max-width: $tablet-width) {
-          column-gap: 30px;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          row-gap: 20px;
+          flex-direction: column;
+
+          .datablock-container:not(:last-child) {
+            padding-bottom: 10px;
+          }
         }
       }
     }
@@ -60,7 +74,7 @@
 
       @media screen and (max-width: $tablet-width) {
         width: auto;
-        padding-top: 45px;
+        padding-top: 25px;
       }
 
       .statistics-fee-data {
@@ -84,14 +98,14 @@
 
       @media screen and (max-width: $tablet-width) {
         flex-direction: column;
-        padding-top: 45px;
+        padding-top: 25px;
       }
 
       .statistics-deposit-container {
         width: 40%;
 
         @media screen and (max-width: $tablet-width) {
-          margin-bottom: 40px;
+          margin-bottom: 20px;
           width: auto;
         }
 
@@ -99,6 +113,7 @@
 
       .statistics-withdraw-container {
         width: 40%;
+        margin-bottom: 20px;
 
         @media screen and (max-width: $tablet-width) {
           width: auto;
@@ -110,10 +125,11 @@
         justify-content: space-evenly;
 
         @media screen and (max-width: $tablet-width) {
-          column-gap: 30px;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          row-gap: 20px;
+          flex-direction: column;
+
+          .datablock-container:not(:last-child) {
+            padding-bottom: 10px;
+          }
         }
       }
     }

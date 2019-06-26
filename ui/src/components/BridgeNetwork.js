@@ -32,7 +32,8 @@ export const BridgeNetwork = ({
         <div className="network-logo-container">
           <div className={`network-logo ${containerName}-logo`} />
         </div>
-        <p className={`${side ? `text-${side}` : ''}`}>
+        <p className="text">
+          <span className="network-basic-label">{`${side === 'left' ? `From` : 'To'}`}</span>
           <span className="network-title">{networkTitle}</span>
           {networkSubtitle ? <span className="network-name">{networkSubtitle}</span> : null}
         </p>

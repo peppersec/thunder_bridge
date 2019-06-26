@@ -2,14 +2,13 @@
 .bridge-container {
     align-items: center;
     display: flex;
-    height: 80vh;
-    margin-left: auto;
-    margin-right: auto;
     position: relative;
     width: 100%;
+    margin: 40px auto;
 
     @media screen and (max-width: $tablet-width) {
-        height: auto;
+        margin-top: 10px;
+        margin-bottom: 20px;
     }
 }
 
@@ -37,6 +36,22 @@
             font-size: 9px;
         }
     }
+
+    .bridge-title {
+        color: $text-color;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.5;
+        padding: 30px 5% 20px;
+
+        @media screen and (max-width: $tablet-width) {
+            max-width: 384px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px 8px 20px;
+        }
+    }
+
     .bridge-transfer {
         display: flex;
         justify-content: center;
@@ -85,7 +100,7 @@
 
             .network-container-left {
                 display: flex;
-                padding: 70px 1% 70px 5%;
+                padding: 0 1% 70px 5%;
                 width: 22%;
 
                 @media screen and (max-width: $tablet-width) {
@@ -96,7 +111,7 @@
             }
             .network-container-right {
                 display: flex;
-                padding: 70px 5% 70px 1%;
+                padding: 0 5% 70px 1%;
                 width: 22%;
 
                 @media screen and (max-width: $tablet-width) {
@@ -135,7 +150,7 @@
                 display: block;
                 font-size: 16px;
                 font-weight: 700;
-                padding: 20px 0;
+                padding-bottom: 20px;
             }
             .network-name {
                 color: $bridge-label-color;
@@ -143,19 +158,9 @@
                 font-size: 24px;
                 font-weight: 700;
             }
-            .text-left {
-                text-align: left;
-
-                @media screen and (max-width: $mobile-width) {
-                    text-align: center;
-                }
-            }
-            .text-right {
-                text-align: right;
-
-                @media screen and (max-width: $mobile-width) {
-                    text-align: center;
-                }
+            .text {
+                padding-top: 20px;
+                text-align: center;
             }
             .network-id {
                 color: $bridge-label-color;
@@ -201,7 +206,6 @@
             }
 
             .transfer-line {
-                margin-top: 70px;
                 height: 100px;
                 position: relative;
                 display: flex;
@@ -295,12 +299,10 @@
                         }
                     }
 
-                    .bridge-form-input-container {
+                    .bridge-form-input-wrapper {
                         display: flex;
-                        justify-content: space-between;
+                        flex-direction: column;
                         width: 292px;
-                        background-color: #f3f4f6;
-                        border-radius: 3px 3px 0 0;
                         margin-bottom: 20px;
 
                         &:first-child {
@@ -323,6 +325,13 @@
                             }
                         }
                     }
+
+                    .bridge-form-input-container {
+                        background-color: #f3f4f6;
+                        border-radius: 3px 3px 0 0;
+                        display: flex;
+                    }
+
                     &-input {
                         font-family: "Nunito",sans-serif;
                         background-color: transparent;
@@ -332,11 +341,18 @@
                         height: 48px;
                         padding: 0 15px;
                         width: 100%;
+                        text-overflow: ellipsis;
 
                         &::placeholder {
                             color: $bridge-textfield-placeholder-color;
                             font-size: 16px;
                             font-weight: 700;
+                        }
+
+                        &-label {
+                            font-size: 14px;
+                            color: $bridge-label-color;
+                            padding-bottom: 5px;
                         }
                     }
                     &-label {
@@ -346,6 +362,7 @@
                         line-height: 48px;
                         margin-right: 15px;
                         text-transform: uppercase;
+                        white-space: nowrap;
                     }
                     &-button {
                         background-color: $bridge-button-background-color;
