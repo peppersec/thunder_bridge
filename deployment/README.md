@@ -54,6 +54,8 @@ docker-compose up -d
 - Customize `config.json` as needed
 - Open [monitoring](./monitoring) folder
 - Customize `.env` file as needed
+- To receive notifications you need to enter your credentials 
+to `config/alertmanager/config.yml`
 - Deploy the monitoring backend
 ```
 docker-compose up -d
