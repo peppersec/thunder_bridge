@@ -2,14 +2,13 @@
 .bridge-container {
     align-items: center;
     display: flex;
-    height: 80vh;
-    margin-left: auto;
-    margin-right: auto;
     position: relative;
     width: 100%;
+    margin: 40px auto;
 
     @media screen and (max-width: $tablet-width) {
-        height: auto;
+        margin-top: 10px;
+        margin-bottom: 20px;
     }
 }
 
