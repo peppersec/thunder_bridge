@@ -10,7 +10,7 @@ For all Bridge parts you have to have [Docker](https://www.docker.com/) installe
 ```
 docker-compose run contracts deploy
 ```
-- Note new contract addresses in console and in addresses.json file, you will
+- Note new contract addresses in console and in `deployment/contracts/data/addresses.json` file, you will
   need to put deployed addresses into your `.env` files in other modules
 
 ## Validator
@@ -28,22 +28,28 @@ docker-compose -p TOKEN_NAME up -d
 docker-compose up -d
 ``` 
 - Go to [ui](./ui) folder
-- `cp config.json.example config.json`
 - `cp .env.example .env`
-- Customize `.env` and `config.json` files as needed
+- Customize `.env` as needed
+- Copy UI config to UI source dir `cp .env ../ui` - those files need to be in sync 
 - Deploy the ui backend
 ```
 docker-compose up -d
 ```
+Since there is config in source directory, if you change the config you will need to make sure the container is rebuilt when redeploying:
+
+```
+docker-compose up -d --rebuild --force-recreate
+```
 
 ## Monitoring
-- ssh to a monitoting host
-- git clone the repo
 - cd to [frontend](./frontend) folder
 - Deploy the webserver
 ```
 docker-compose up -d
 ``` 
+- Go to [monitoring source](../monitor)
+- `cp config.json.example config.json`
+- Customize `config.json` as needed
 - Open [monitoring](./monitoring) folder
 - Customize `.env` file as needed
 - Deploy the monitoring backend
@@ -52,9 +58,3 @@ docker-compose up -d
 ```
 
 Now you can open `MONITORING_HOSTNAME` in the browser
-
-### Docker-machine
-1. `docker-machine scp -r alertmanager <DOCKER_MACHINE_NAME>:<PATH_TO_FOLDER_ON_MACHINE>thunder_bridge/deployment/monitoring/`
-2. `docker-machine scp -r grafana <DOCKER_MACHINE_NAME>:<PATH_TO_FOLDER_ON_MACHINE>thunder_bridge/deployment/monitoring/`
-3. `docker-machine scp -r prometheus <DOCKER_MACHINE_NAME>:<PATH_TO_FOLDER_ON_MACHINE>thunder_bridge/deployment/monitoring/`
-4. `docker-machine scp config.json <DOCKER_MACHINE_NAME>:<PATH_TO_FOLDER_ON_MACHINE>thunder_bridge/deployment/monitoring/` 
