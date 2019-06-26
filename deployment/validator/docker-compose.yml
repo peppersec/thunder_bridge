@@ -1,5 +1,9 @@
 version: '2'
 
+volumes:
+  rabbitmq:
+  redis:
+
 services:
   rabbit:
     image: rabbitmq:3
@@ -7,14 +11,14 @@ services:
     environment: 
       RABBITMQ_NODENAME: node@rabbit
     volumes: 
-      - ./data/rabbitmq:/var/lib/rabbitmq/mnesia
+      - rabbitmq:/var/lib/rabbitmq/mnesia
 
   redis:
     image: redis:4
     restart: always
     command: [redis-server, --appendonly, 'yes']
     volumes: 
-      - ./data/redis:/data
+      - redis:/data
 
   bridge:
     image: thundercore/bridge
