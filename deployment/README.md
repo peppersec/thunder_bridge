@@ -1,5 +1,5 @@
 # Deploying
-For all Bridge parts you have to have [Docker](https://www.docker.com/) installed on the host. 
+For all Bridge parts you have to have [Docker](https://www.docker.com/) installed on the host. You can use docker with remote access for convenience.
 
 ## Contracts
 
@@ -20,6 +20,9 @@ docker-compose run contracts deploy
 ```
 docker-compose -p TOKEN_NAME up -d
 ```
+If you want to deploy multiple validators to the same machine (for example for testing), 
+you need to  use `-p TOKEN_NAME_VALIDATOR_INDEX` or something similar - it has to be unique for 
+each deployment on the same machine.
 
 ## User interface
 - Open the [frontend](./frontend) folder
@@ -28,15 +31,14 @@ docker-compose -p TOKEN_NAME up -d
 docker-compose up -d
 ``` 
 - Go to [ui](./ui) folder
-- `cp .env.example .env`
 - Customize `.env` as needed
-- Copy UI config to UI source dir `cp .env ../ui` - those files need to be in sync 
+- Copy UI config to UI source dir `cp .env ../ui/` - those files need to be in sync 
 - Deploy the ui backend
 ```
 docker-compose up -d
 ```
-Since there is config in source directory, if you change the config you will need to make sure the container is rebuilt when redeploying:
-
+Since there is a config in source directory, if you change the config after deployment,
+you will need to make sure the container is rebuilt when redeploying/updating:
 ```
 docker-compose up -d --rebuild --force-recreate
 ```
