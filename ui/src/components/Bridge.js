@@ -382,6 +382,7 @@ export class Bridge extends React.Component {
         <div className="bridge">
           <div className="bridge-transfer">
             <div className="bridge-transfer-content">
+              <div className="bridge-title">Brigde</div>
               <div className="bridge-transfer-content-background">
                 <BridgeNetwork
                   balance={reverse ? foreignStore.balance : homeStore.getDisplayedBalance()}
@@ -411,7 +412,7 @@ export class Bridge extends React.Component {
                   side="right"
                 />
               </div>
-              <BridgeChoose 
+              <BridgeChoose
                 setNewTokenHandler={this.setNewToken}
                 web3Store = {web3Store}
                 alert = {alertStore}
