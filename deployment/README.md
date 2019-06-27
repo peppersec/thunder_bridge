@@ -24,6 +24,13 @@ If you want to deploy multiple validators to the same machine (for example for t
 you need to  use `-p TOKEN_NAME_VALIDATOR_INDEX` or something similar - it has to be unique for 
 each deployment on the same machine.
 
+### Storing validator private keys 
+
+Validator private keys need to be stored as objects on AWS S3 and encrypted by AWS KMS 
+master key. You need to make sure that validators don't have access to each others 
+private keys. Ideally, each validator needs to have own IAM user, KMS master key, and 
+be able to read only own encrypted private key from S3.
+
 ## User interface
 - Open the [frontend](./frontend) folder
 - Deploy the webserver:
