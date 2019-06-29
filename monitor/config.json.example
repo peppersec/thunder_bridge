@@ -1,5 +1,5 @@
 {
-  "TOKEN1" : {
+  "USDT" : {
     "HOME_RPC_URL":"https://rinkeby.infura.io/",
     "FOREIGN_RPC_URL":"https://kovan.infura.io/",
     "HOME_BRIDGE_ADDRESS":"0x8E..b5",
@@ -11,7 +11,7 @@
     "GAS_PRICE_FALLBACK":21,
     "UPDATE_PERIOD":120000
   },
-  "TOKEN2" : {
+  "DAI" : {
     "HOME_RPC_URL":"https://rinkeby.infura.io/",
     "FOREIGN_RPC_URL":"https://kovan.infura.io/",
     "HOME_BRIDGE_ADDRESS":"0x8E..b5",
