@@ -39,7 +39,7 @@ docker-compose up -d
 ``` 
 - Go to [ui](./ui) folder
 - Customize `.env` as needed
-- Copy UI config to UI source dir `cp .env ../ui/` - those files need to be in sync 
+- Copy UI config to UI source dir `cp .env ../../ui/` - those files need to be in sync 
 - Deploy the ui backend
 ```
 docker-compose up -d
