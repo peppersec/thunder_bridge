@@ -382,7 +382,7 @@ export class Bridge extends React.Component {
         <div className="bridge">
           <div className="bridge-transfer">
             <div className="bridge-transfer-content">
-              <div className="bridge-title">Brigde</div>
+              <div className="bridge-title">Bridge</div>
               <div className="bridge-transfer-content-background">
                 <BridgeNetwork
                   balance={reverse ? foreignStore.balance : homeStore.getDisplayedBalance()}
