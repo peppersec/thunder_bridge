@@ -842,21 +842,6 @@
             "selected": true,
             "text": "All",
             "value": "$__all"
-          },
-          {
-            "selected": false,
-            "text": "0x237086398f30E99316C781dD2Ef1E7C612d9e679",
-            "value": "0x237086398f30E99316C781dD2Ef1E7C612d9e679"
-          },
-          {
-            "selected": false,
-            "text": "0x69Ac0688f8D5dbAa519AbFFDE6CFF500341741Df",
-            "value": "0x69Ac0688f8D5dbAa519AbFFDE6CFF500341741Df"
-          },
-          {
-            "selected": false,
-            "text": "0xBC179527eeA427DbCC04dDbbed2259fA534D2D9B",
-            "value": "0xBC179527eeA427DbCC04dDbbed2259fA534D2D9B"
           }
         ],
         "query": "bridge_balance",
