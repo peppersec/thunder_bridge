@@ -53,13 +53,18 @@ export class Bridge extends React.Component {
     })
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState, snapshot) {
     const { web3Store } = this.props.RootStore
     web3Store.getWeb3Promise.then(() => {
       const reverse = web3Store.metamaskNet.id.toString() === web3Store.foreignNet.id.toString()
       if (reverse !== this.state.reverse) {
         this.setState({
           reverse
+        })
+      }
+      if (!this.state.recipient && web3Store.defaultAccount.address && !prevState.recipient) {
+        this.setState({
+          recipient: web3Store.defaultAccount.address
         })
       }
     })
