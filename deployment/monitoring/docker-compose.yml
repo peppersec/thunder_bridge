@@ -33,6 +33,9 @@ services:
     image: thundercore/bridge-monitor
     build: ../../monitor
     restart: always
+    environment:
+      VIRTUAL_HOST: $METRICS_HOSTNAME
+      LETSENCRYPT_HOST: $METRICS_HOSTNAME
 
 networks:
   default:
