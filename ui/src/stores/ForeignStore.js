@@ -4,7 +4,7 @@ import { getBlockNumber } from './utils/web3'
 import {
   getMaxPerTxLimit,
   getMinPerTxLimit,
-  getCurrentLimit,
+  getForeignLimit,
   getPastEvents,
   getTotalSupply,
   getBalanceOf,
@@ -23,9 +23,7 @@ import sleep from './utils/sleep'
 import {
   getBridgeABIs,
   getUnit,
-  BRIDGE_MODES,
-  decodeFeeManagerMode,
-  FEE_MANAGER_MODE
+  BRIDGE_MODES
 } from './utils/bridgeMode'
 const BRIDGE_VALIDATORS_ABI = require('../../abis/BridgeValidators.abi')
 import ERC20Bytes32Abi from './utils/ERC20Bytes32.abi'
@@ -296,7 +294,9 @@ class ForeignStore {
   @action
   async getCurrentLimit() {
     try {
-      const result = await getCurrentLimit(this.foreignBridge, this.tokenDecimals)
+      // we need to take limits from Home side because Foreign side cannot count incoming transfers
+      // so we use `executed` amount from home side as totalSpentPerDay on foreign
+      const result = await getForeignLimit(this.homeStore.homeBridge, this.tokenDecimals)
       this.maxCurrentDeposit = result.maxCurrentDeposit
       this.dailyLimit = result.dailyLimit
       this.totalSpentPerDay = result.totalSpentPerDay

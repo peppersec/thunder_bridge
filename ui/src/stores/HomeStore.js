@@ -6,7 +6,7 @@ import { fromDecimals } from './utils/decimals'
 import {
   getMaxPerTxLimit,
   getMinPerTxLimit,
-  getCurrentLimit,
+  getHomeLimit,
   getPastEvents,
   getMessage,
   getErc677TokenAddress,
@@ -382,7 +382,7 @@ class HomeStore {
   @action
   async getCurrentLimit() {
     try {
-      const result = await getCurrentLimit(this.homeBridge, this.tokenDecimals)
+      const result = await getHomeLimit(this.homeBridge, this.tokenDecimals)
       this.maxCurrentDeposit = result.maxCurrentDeposit
       this.dailyLimit = result.dailyLimit
       this.totalSpentPerDay = result.totalSpentPerDay

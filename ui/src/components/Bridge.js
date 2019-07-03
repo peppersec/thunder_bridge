@@ -143,7 +143,7 @@ export class Bridge extends React.Component {
       swal('Error', `Please switch wallet to ${web3Store.foreignNet.name} network`, 'error')
       return
     }
-    if (!isExternalErc20 && isLessThan(amount, foreignStore.minPerTx)) {
+    if (isLessThan(amount, foreignStore.minPerTx)) {
       alertStore.pushError(
         `The amount is less than minimum amount per transaction.\nThe min per transaction is: ${
           foreignStore.minPerTx
@@ -151,7 +151,7 @@ export class Bridge extends React.Component {
       )
       return
     }
-    if (!isExternalErc20 && isGreaterThan(amount, foreignStore.maxPerTx)) {
+    if (isGreaterThan(amount, foreignStore.maxPerTx)) {
       alertStore.pushError(
         `The amount is above maximum amount per transaction.\nThe max per transaction is: ${
           foreignStore.maxPerTx
@@ -159,7 +159,7 @@ export class Bridge extends React.Component {
       )
       return
     }
-    if (!isExternalErc20 && isGreaterThan(amount, foreignStore.maxCurrentDeposit)) {
+    if (isGreaterThan(amount, foreignStore.maxCurrentDeposit)) {
       alertStore.pushError(
         `The amount is above current daily limit.\nThe max withdrawal today: ${
           foreignStore.maxCurrentDeposit
@@ -332,7 +332,7 @@ export class Bridge extends React.Component {
       totalSupply: foreignStore.totalSupply,
       balance: foreignStore.balance,
       displayTokenAddress: true,
-      displayBridgeLimits: !isExternalErc20,
+      displayBridgeLimits: true,
       getExplorerAddressUrl: address => foreignStore.getExplorerAddressUrl(address)
     }
 
