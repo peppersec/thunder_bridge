@@ -48,11 +48,6 @@ contract ForeignBridgeErcToErc is BasicBridge, BasicForeignBridge, FeeManager {
         return bytes4(keccak256(abi.encodePacked("erc-to-erc-core")));
     }
 
-    function claimTokens(address _token, address _to) public onlyIfOwnerOfProxy {
-        require(_token != address(erc20token()));
-        super.claimTokens(_token, _to);
-    }
-
     function erc20token() public view returns(ERC20Basic) {
         return ERC20Basic(addressStorage[keccak256(abi.encodePacked("erc20token"))]);
     }
