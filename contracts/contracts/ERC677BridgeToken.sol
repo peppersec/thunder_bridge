@@ -40,7 +40,7 @@ contract ERC677BridgeToken is
         emit Transfer(msg.sender, _to, _value, _data);
 
         if (isContract(_to)) {
-            require(contractFallback(_to, _value, _data));
+            require(contractFallback(msg.sender, _to, _value, _data));
         }
         return true;
     }
@@ -57,7 +57,7 @@ contract ERC677BridgeToken is
     function transfer(address _to, uint256 _value) public returns (bool)
     {
         require(superTransfer(_to, _value));
-        if (isContract(_to) && !contractFallback(_to, _value, new bytes(0))) {
+        if (isContract(_to) && !contractFallback(msg.sender, _to, _value, new bytes(0))) {
             if (_to == bridgeContract) {
                 revert();
             } else {
@@ -67,11 +67,24 @@ contract ERC677BridgeToken is
         return true;
     }
 
-    function contractFallback(address _to, uint _value, bytes _data)
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool)
+    {
+        require(super.transferFrom(_from, _to, _value));
+        if (isContract(_to) && !contractFallback(_from, _to, _value, new bytes(0))) {
+            if (_to == bridgeContract) {
+                revert();
+            } else {
+                emit ContractFallbackCallFailed(_from, _to, _value);
+            }
+        }
+        return true;
+    }
+
+    function contractFallback(address _from, address _to, uint _value, bytes _data)
         private
         returns(bool)
     {
-        return _to.call(abi.encodeWithSignature("onTokenTransfer(address,uint256,bytes)",  msg.sender, _value, _data));
+        return _to.call(abi.encodeWithSignature("onTokenTransfer(address,uint256,bytes)",  _from, _value, _data));
     }
 
     function isContract(address _addr)
