@@ -1,5 +1,5 @@
 # Deploying
-For all Bridge parts you have to have [Docker](https://www.docker.com/) installed on the host. You can use docker with remote access for convenience.
+For all Bridge parts you have to have [Docker](https://www.docker.com/) and [Node.js](https://nodejs.org/) installed on the host. You can use docker with remote access for convenience.
 
 ## Contracts
 
